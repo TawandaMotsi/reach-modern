@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const promises = [
   "Ensure our service users are supported by highly competent, caring and compatible carers.",
@@ -61,7 +63,7 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
 export default function AboutPage() {
   return (
     <main style={{ fontFamily: "'Georgia', 'Times New Roman', serif", background: "#faf9f7", color: "#2c2c2c", overflowX: "hidden" }}>
-
+      <Header />
       {/* ── HERO ── */}
       <section
         style={{
@@ -82,7 +84,7 @@ export default function AboutPage() {
 
         <div style={{ maxWidth: 760, position: "relative", zIndex: 1 }}>
           <p style={{ color: "rgba(255,255,255,0.75)", letterSpacing: "0.18em", fontSize: "0.78rem", textTransform: "uppercase", marginBottom: 20, fontFamily: "'Trebuchet MS', sans-serif" }}>
-            About Us
+            {/* About Us */}
           </p>
           <h1 style={{ fontSize: "clamp(2rem, 5vw, 3.4rem)", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, marginBottom: 24, letterSpacing: "-0.02em" }}>
             Providing exceptional care<br />in community settings
@@ -247,49 +249,7 @@ export default function AboutPage() {
           </FadeIn>
         </div>
       </section>
-
-      {/* ── CTA BANNER ── */}
-      <section style={{
-        background: "linear-gradient(135deg, #0a4d7c 0%, #0984e3 100%)",
-        padding: "72px 24px",
-        textAlign: "center",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{ position: "absolute", top: -60, right: -60, width: 300, height: 300, borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <p style={{ color: "rgba(255,255,255,0.7)", letterSpacing: "0.18em", textTransform: "uppercase", fontSize: "0.75rem", fontFamily: "sans-serif", marginBottom: 14 }}>
-            To find out more about our services
-          </p>
-          <h2 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", color: "#fff", fontWeight: 700, marginBottom: 16 }}>
-            Get in touch
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7 }}>
-            Our friendly staff are always available to help you with your needs. If you have questions, please get in touch with us for more information.
-          </p>
-          <a
-            href="/contact"
-            style={{
-              display: "inline-block",
-              background: "#fff",
-              color: "#0a4d7c",
-              fontWeight: 700,
-              fontFamily: "sans-serif",
-              padding: "14px 40px",
-              borderRadius: 50,
-              textDecoration: "none",
-              fontSize: "1rem",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.2)"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.15)"; }}
-          >
-            Contact Us
-          </a>
-        </div>
-      </section>
-
+        <Footer />
     </main>
   );
 }

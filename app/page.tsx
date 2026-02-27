@@ -1,6 +1,10 @@
 "use client";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
+
 
 import { useEffect, useRef, useState } from "react";
+
 
 const heroSlides = [
   { heading: "Children and young people", description: "We provide services for those with medical, emotional and complex health care needs", buttonText: "Find out more", href: "/care-services" },
@@ -104,11 +108,13 @@ function HeroSlider() {
 export default function HomePage() {
   return (
     <main style={{ fontFamily: "'Georgia', 'Times New Roman', serif", background: "#faf9f7", color: "#2c2c2c", overflowX: "hidden" }}>
-
-      <HeroSlider />
+    <Header />
+    
+      <HeroSlider /> 
 
       {/* Quick links bar */}
       <section style={{ background: "#0a4d7c" }}>
+      
         <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
           {[
             { label: "Looking for Care?", href: "/care-services" },
@@ -268,7 +274,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section style={{ background: "#0a4d7c", padding: "64px 24px", textAlign: "center" }}>
+      {/* <section style={{ background: "#0a4d7c", padding: "64px 24px", textAlign: "center" }}>
         <FadeIn>
           <h2 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", color: "#fff", fontWeight: 700, marginBottom: 14 }}>Ready to get started?</h2>
           <p style={{ color: "rgba(255,255,255,0.75)", maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.65 }}>
@@ -278,8 +284,8 @@ export default function HomePage() {
             Contact Us
           </a>
         </FadeIn>
-      </section>
-
+      </section> */}
+      <Footer />
     </main>
   );
 }
