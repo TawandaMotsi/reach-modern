@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import router from "next/router";
+import useRouter from "next/navigation";
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,7 +46,7 @@ function RegistrationForm() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [focused, setFocused] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
-
+  const router = useRouter();
   const validate = () => {
     const e: Partial<Record<keyof FormData, string>> = {};
     if (!form.firstName.trim()) e.firstName = "Required";
@@ -88,11 +88,11 @@ function RegistrationForm() {
     marginBottom: 6,
     fontFamily: "sans-serif",
   };
-
-  if (submitted) return (
-    router.push("/application")
-  );
-
+  useEffect (() => {
+    if (submitted) {
+      router.push("/application");
+    }
+  }, [submitted]);
   return (
     <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
