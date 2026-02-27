@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
@@ -175,7 +177,7 @@ function InfoCard({ icon, label, children }: { icon: React.ReactNode; label: str
 export default function ContactPage() {
   return (
     <main style={{ fontFamily: "'Georgia','Times New Roman',serif", background: "#f4f8fc", color: "#1a2a3a", overflowX: "hidden" }}>
-
+      <Header />
       {/* ── Hero ── */}
       <section style={{ position: "relative", background: "linear-gradient(135deg, #062e4f 0%, #0a5a8c 55%, #0984e3 100%)", padding: "130px 24px 90px", textAlign: "center", overflow: "hidden" }}>
         {/* Decorative circles */}
@@ -288,7 +290,7 @@ export default function ContactPage() {
 
         </div>
       </section>
-
+        <Footer />
     </main>
   );
 }
