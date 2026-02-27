@@ -110,7 +110,7 @@ export default function ApplyingOnlinePage() {
 
               {/* CTA */}
               <a
-                href="/application"
+                href="/applicationform"
                 style={{ display: "block", background: "#0984e3", color: "#fff", borderRadius: 50, padding: "16px 36px", textDecoration: "none", fontFamily: "sans-serif", fontWeight: 700, fontSize: "1rem", textAlign: "center", boxShadow: "0 6px 24px rgba(9,132,227,0.32)", transition: "background 0.2s, transform 0.2s" }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#076bbf"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#0984e3"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; }}
