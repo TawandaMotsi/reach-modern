@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import useRouter from "next/navigation";
+import { useRouter } from "next/navigation"; 
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -42,7 +43,7 @@ const checklist = [
 export default function ApplyingOnlinePage() {
   return (
     <main style={{ fontFamily: "'Georgia','Times New Roman',serif", background: "#f4f8fc", color: "#1a2a3a", overflowX: "hidden" }}>
-
+      <Header />
       {/* ── Hero ── */}
       <section style={{ position: "relative", background: "linear-gradient(135deg, #062e4f 0%, #0a5a8c 55%, #0984e3 100%)", padding: "120px 24px 80px", overflow: "hidden", textAlign: "center" }}>
         <div style={{ position: "absolute", top: -120, right: -120, width: 500, height: 500, borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
@@ -183,7 +184,7 @@ export default function ApplyingOnlinePage() {
 
         </div>
       </section>
-
+      <Footer />
     </main>
   );
 }
