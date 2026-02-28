@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { getImagePath } from "../lib/utils";
 
 export default function Footer() {
@@ -13,14 +14,14 @@ export default function Footer() {
         <p style={{ color: "rgba(255,255,255,0.75)", maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.65, fontSize: "1rem" }}>
           Our friendly team is always available to help. Get in touch today and let us find the right care solution for you.
         </p>
-        <a
+        <Link
           href="/contact"
           style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 44px", borderRadius: 50, textDecoration: "none", fontSize: "1rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)", transition: "transform 0.2s" }}
           onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-2px)")}
           onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
         >
           Contact Us
-        </a>
+        </Link>
       </section>
 
       {/* ── Main Footer ── */}
