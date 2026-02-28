@@ -12,7 +12,7 @@ const heroSlides = [
   { heading: "Home care your family will love", buttonText: "Find out more", href: "/care-services" },
   { heading: "We are recruiting", description: "Nurses, Care assistants and support workers", buttonText: "Apply now", href: "/register" },
   { heading: "Carefully selected and vetted trained staff", buttonText: "Find out more", href: "/staffing" },
-  { heading: "Quality care always", buttonText: "Get in touch", href: "/contact-us" },
+  { heading: "Quality care always", buttonText: "Get in touch", href: "/contact" },
 ];
 
 const careServices = [
@@ -143,7 +143,7 @@ export default function HomePage() {
           <p style={{ lineHeight: 1.85, color: "#555", fontSize: "1.05rem", maxWidth: 720, margin: "0 auto 32px" }}>
             We specialise in the supply of care services to children, young people, and adults in a variety of community settings — promoting independence, maintaining dignity and improving quality of life. We work with Social Care, Clinical Commissioning Groups, Private Clients, and more.
           </p>
-          <a href="/about-us" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>
+          <a href="/about" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>
             Learn More About Us
           </a>
         </FadeIn>
@@ -222,7 +222,7 @@ export default function HomePage() {
               <p style={{ color: "rgba(255,255,255,0.65)", lineHeight: 1.65, marginBottom: 32, fontStyle: "italic" }}>
                 No need to worry — we will come out and have a chat about your needs.
               </p>
-              <a href="/contact-us" style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+              <a href="/contact" style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 Book Assessment
               </a>
             </div>
