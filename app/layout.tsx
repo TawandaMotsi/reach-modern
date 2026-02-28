@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Reach Healthcare Solutions | Quality Care & Staffing Services",
   description: "Professional healthcare staffing and home care services. We provide nurses, care assistants, and support workers for children, young people, and adults.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({
