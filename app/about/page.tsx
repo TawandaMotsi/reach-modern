@@ -100,7 +100,7 @@ export default function AboutPage() {
         <FadeIn>
           <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}>
             <img
-              src="https://reach-healthcare.com/wp-content/uploads/2021/01/iStock-503206195-1024x821-1.jpg"
+              src="/iStock-503206195-1024x821-1.jpg"
               alt="Care worker with patient"
               style={{ width: "100%", display: "block", objectFit: "cover" }}
             />
@@ -143,7 +143,7 @@ export default function AboutPage() {
           <FadeIn delay={150}>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
               <img
-                src="https://reach-healthcare.com/wp-content/uploads/2021/02/iStock-857895554-1024x716.jpg"
+                src="/iStock-857895554-1024x716.jpg"
                 alt="Family at home"
                 style={{ width: "100%", display: "block", objectFit: "cover" }}
               />
@@ -158,7 +158,7 @@ export default function AboutPage() {
           <FadeIn>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
               <img
-                src="https://reach-healthcare.com/wp-content/uploads/2021/02/6-1-scaled.jpg"
+                src="/6-1-scaled.jpg"
                 alt="Professional care"
                 style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 380 }}
               />

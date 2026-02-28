@@ -54,7 +54,7 @@ export default function Footer() {
             {/* Logo + Tagline */}
             <div>
               <img
-                src="https://reach-healthcare.com/wp-content/uploads/2019/12/Reach_Healthcare_Logo_Mono-300x256.png"
+                src="/logo-mono.png"
                 alt="Reach Healthcare Solutions"
                 style={{ width: 80, marginBottom: 14, filter: "brightness(0) invert(1) opacity(0.85)" }}
               />

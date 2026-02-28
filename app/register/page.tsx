@@ -244,7 +244,7 @@ export default function RegisterPage() {
               {/* Photo */}
               <div style={{ borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 32px rgba(9,100,200,0.12)" }}>
                 <img
-                  src="https://reach-healthcare-com.300media.co.uk/wp-content/uploads/2020/08/iStock-909965082.jpg"
+                  src="/iStock-503206195-1024x821-1.jpg"
                   alt="Healthcare professional"
                   style={{ width: "100%", height: 240, objectFit: "cover", display: "block" }}
                 />
