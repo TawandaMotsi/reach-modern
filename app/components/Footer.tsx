@@ -14,7 +14,7 @@ export default function Footer() {
           Our friendly team is always available to help. Get in touch today and let us find the right care solution for you.
         </p>
         <a
-          href="/contact-us"
+          href="/contact"
           style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 44px", borderRadius: 50, textDecoration: "none", fontSize: "1rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)", transition: "transform 0.2s" }}
           onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-2px)")}
           onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
