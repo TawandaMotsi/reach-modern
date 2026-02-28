@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { getImagePath } from "../lib/utils";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
@@ -24,7 +25,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/logo.png"
+            src={getImagePath("/logo.png")}
             alt="Reach Healthcare Logo"
             width={80}
             height={80}

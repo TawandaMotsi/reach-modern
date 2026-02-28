@@ -1,6 +1,7 @@
 "use client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { getImagePath } from "../lib/utils";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -244,7 +245,7 @@ export default function RegisterPage() {
               {/* Photo */}
               <div style={{ borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 32px rgba(9,100,200,0.12)" }}>
                 <img
-                  src="/iStock-503206195-1024x821-1.jpg"
+                  src={getImagePath("/iStock-503206195-1024x821-1.jpg")}
                   alt="Healthcare professional"
                   style={{ width: "100%", height: 240, objectFit: "cover", display: "block" }}
                 />

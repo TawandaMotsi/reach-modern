@@ -1,4 +1,5 @@
 import React from "react";
+import { getImagePath } from "../lib/utils";
 
 export default function Footer() {
   return (
@@ -54,7 +55,7 @@ export default function Footer() {
             {/* Logo + Tagline */}
             <div>
               <img
-                src="/logo-mono.png"
+                src={getImagePath("/logo-mono.png")}
                 alt="Reach Healthcare Solutions"
                 style={{ width: 80, marginBottom: 14, filter: "brightness(0) invert(1) opacity(0.85)" }}
               />

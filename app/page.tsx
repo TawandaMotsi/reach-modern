@@ -1,6 +1,7 @@
 "use client";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
+import { getImagePath } from "@/app/lib/utils";
 
 
 import { useEffect, useRef, useState } from "react";
@@ -98,7 +99,7 @@ function HeroSlider() {
       </div>
 
       <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "45%", overflow: "hidden" }}>
-        <img src="/iStock-842108572-1024x683.jpg" alt="Care" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
+        <img src={getImagePath("/iStock-842108572-1024x683.jpg")} alt="Care" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #0a5a8c 0%, transparent 60%)" }} />
       </div>
     </section>
@@ -206,7 +207,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 48, alignItems: "center", position: "relative", zIndex: 1 }}>
           <FadeIn>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.25)" }}>
-              <img src="/iStock-842108572-1024x683.jpg" alt="Care assessment" style={{ width: "100%", display: "block", objectFit: "cover" }} />
+              <img src={getImagePath("/iStock-842108572-1024x683.jpg")} alt="Care assessment" style={{ width: "100%", display: "block", objectFit: "cover" }} />
             </div>
           </FadeIn>
           <FadeIn delay={150}>
@@ -267,7 +268,7 @@ export default function HomePage() {
           </FadeIn>
           <FadeIn delay={150}>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
-              <img src="/iStock-503206195-1024x821-1.jpg" alt="Healthcare staff" style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 420 }} />
+              <img src={getImagePath("/iStock-503206195-1024x821-1.jpg")} alt="Healthcare staff" style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 420 }} />
             </div>
           </FadeIn>
         </div>
