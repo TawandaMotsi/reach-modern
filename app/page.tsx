@@ -2,8 +2,7 @@
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 import { getImagePath } from "@/app/lib/utils";
-
-
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -86,9 +85,9 @@ function HeroSlider() {
             </p>
           )}
           {!slide.description && <div style={{ marginBottom: 36 }} />}
-          <a href={slide.href} style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
+          <Link href={slide.href} style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
             {slide.buttonText}
-          </a>
+          </Link>
         </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 48 }}>
@@ -122,11 +121,11 @@ export default function HomePage() {
             { label: "Looking for Work?", href: "/work-for-us" },
             { label: "Looking for Staff?", href: "/staffing" },
           ].map((item, i) => (
-            <a key={i} href={item.href} style={{ display: "block", padding: "20px 28px", textAlign: "center", color: "#fff", textDecoration: "none", fontFamily: "sans-serif", fontWeight: 600, fontSize: "0.88rem", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.15)" : "none", transition: "background 0.2s" }}
+            <Link key={i} href={item.href} style={{ display: "block", padding: "20px 28px", textAlign: "center", color: "#fff", textDecoration: "none", fontFamily: "sans-serif", fontWeight: 600, fontSize: "0.88rem", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.15)" : "none", transition: "background 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
               onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
               {item.label} →
-            </a>
+            </Link>
           ))}
         </div>
       </section>
@@ -143,9 +142,9 @@ export default function HomePage() {
           <p style={{ lineHeight: 1.85, color: "#555", fontSize: "1.05rem", maxWidth: 720, margin: "0 auto 32px" }}>
             We specialise in the supply of care services to children, young people, and adults in a variety of community settings — promoting independence, maintaining dignity and improving quality of life. We work with Social Care, Clinical Commissioning Groups, Private Clients, and more.
           </p>
-          <a href="/about" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>
+          <Link href="/about" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>
             Learn More About Us
-          </a>
+          </Link>
         </FadeIn>
       </section>
 
@@ -160,9 +159,9 @@ export default function HomePage() {
                 </div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#0a4d7c", marginBottom: 14, lineHeight: 1.3 }}>{p.title}</h3>
                 <p style={{ lineHeight: 1.7, color: "#555", fontSize: "0.92rem", flex: 1 }}>{p.desc}</p>
-                <a href={p.href} style={{ display: "inline-block", marginTop: 24, color: "#0984e3", fontFamily: "sans-serif", fontWeight: 600, fontSize: "0.85rem", textDecoration: "none" }}>
+                <Link href={p.href} style={{ display: "inline-block", marginTop: 24, color: "#0984e3", fontFamily: "sans-serif", fontWeight: 600, fontSize: "0.85rem", textDecoration: "none" }}>
                   Read more →
-                </a>
+                </Link>
               </div>
             </FadeIn>
           ))}
@@ -193,9 +192,9 @@ export default function HomePage() {
           </div>
           <FadeIn delay={200}>
             <div style={{ textAlign: "center", marginTop: 44 }}>
-              <a href="/care-services" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "14px 40px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem" }}>
+              <Link href="/care-services" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "14px 40px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem" }}>
                 View All Services
-              </a>
+              </Link>
             </div>
           </FadeIn>
         </div>
@@ -222,9 +221,9 @@ export default function HomePage() {
               <p style={{ color: "rgba(255,255,255,0.65)", lineHeight: 1.65, marginBottom: 32, fontStyle: "italic" }}>
                 No need to worry — we will come out and have a chat about your needs.
               </p>
-              <a href="/contact" style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+              <Link href="/contact" style={{ display: "inline-block", background: "#fff", color: "#0a4d7c", fontWeight: 700, padding: "14px 36px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
                 Book Assessment
-              </a>
+              </Link>
             </div>
           </FadeIn>
         </div>
@@ -261,8 +260,8 @@ export default function HomePage() {
                 ))}
               </div>
               <div style={{ display: "flex", gap: 14, marginTop: 36, flexWrap: "wrap" }}>
-                <a href="/register" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 32px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>Register Today</a>
-                <a href="/work-for-us" style={{ display: "inline-block", background: "transparent", color: "#0984e3", fontWeight: 700, padding: "13px 32px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem", border: "2px solid #0984e3" }}>Find Out More</a>
+                <Link href="/register" style={{ display: "inline-block", background: "#0984e3", color: "#fff", fontWeight: 700, padding: "13px 32px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem" }}>Register Today</Link>
+                <Link href="/work-for-us" style={{ display: "inline-block", background: "transparent", color: "#0984e3", fontWeight: 700, padding: "13px 32px", borderRadius: 50, textDecoration: "none", fontFamily: "sans-serif", fontSize: "0.9rem", border: "2px solid #0984e3" }}>Find Out More</Link>
               </div>
             </div>
           </FadeIn>
