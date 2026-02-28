@@ -1049,8 +1049,6 @@ function Step4({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void })
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
-
 export default function ApplicationPage() {
   const [step, setStep] = useState<Step>(1);
   const [form, setFormRaw] = useState<FormData>(initialForm);
