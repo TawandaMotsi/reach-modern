@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { getImagePath } from "../lib/utils";
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,14 +39,14 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 export default function CareServicesPage() {
   const services = [
-    { img: "/images/iStock-524910948.jpg", title: "Children & Young People", desc: "Our team has practical experience in dealing with challenging behaviours like…", href: "/children-young-people/" },
-    { img: "/images/iStock-888167478.jpg", title: "Domiciliary Care", desc: "Unforeseen circumstances can make the simplest activities of daily living challenging…", href: "/domiciliary-care/" },
-    { img: "/images/iStock-842108572.jpg", title: "Live-in Care", desc: "We believe that moving people away from their own homes where they've lived for many…", href: "/live-in-care/" },
-    { img: "/images/iStock-477715817.jpg", title: "Hospital to Home", desc: "One of the leading causes of hospital readmission or slow post-hospitalisation…", href: "/hospital-to-home/" },
-    { img: "/images/shutterstock_168769925.jpg", title: "Respite Care", desc: "Respite Care is temporary care, which provides family caregivers relief from the full-time…", href: "/respite-care/" },
-    { img: "/images/iStock-532529087.jpg", title: "End of Life", desc: "We can provide comforting, end-of-life care for your loved one and assist the family during…", href: "/end-of-life/" },
-    { img: "/images/iStock-1149278960.jpg", title: "Supported Living", desc: "Here at Reach Healthcare Solutions, we believe in enjoying a life that is full of purpose and realising…", href: "/supported-living/" },
-    { img: "/images/IMG-20210120-WA0015.jpg", title: "Specialist Care", desc: "Reach Healthcare Solutions is a specialist care provider providing service for adult clients…", href: "/specialist-care/" },
+    { img: getImagePath("/images/iStock-524910948.jpg"), title: "Children & Young People", desc: "Our team has practical experience in dealing with challenging behaviours like…", href: "/children-young-people/" },
+    { img: getImagePath("/images/iStock-888167478.jpg"), title: "Domiciliary Care", desc: "Unforeseen circumstances can make the simplest activities of daily living challenging…", href: "/domiciliary-care/" },
+    { img: getImagePath("/images/iStock-842108572.jpg"), title: "Live-in Care", desc: "We believe that moving people away from their own homes where they've lived for many…", href: "/live-in-care/" },
+    { img: getImagePath("/images/iStock-477715817.jpg"), title: "Hospital to Home", desc: "One of the leading causes of hospital readmission or slow post-hospitalisation…", href: "/hospital-to-home/" },
+    { img: getImagePath("/images/shutterstock_168769925.jpg"), title: "Respite Care", desc: "Respite Care is temporary care, which provides family caregivers relief from the full-time…", href: "/respite-care/" },
+    { img: getImagePath("/images/iStock-532529087.jpg"), title: "End of Life", desc: "We can provide comforting, end-of-life care for your loved one and assist the family during…", href: "/end-of-life/" },
+    { img: getImagePath("/images/iStock-1149278960.jpg"), title: "Supported Living", desc: "Here at Reach Healthcare Solutions, we believe in enjoying a life that is full of purpose and realising…", href: "/supported-living/" },
+    { img: getImagePath("/images/IMG-20210120-WA0015.jpg"), title: "Specialist Care", desc: "Reach Healthcare Solutions is a specialist care provider providing service for adult clients…", href: "/specialist-care/" },
   ];
 
   return (
@@ -100,7 +101,7 @@ export default function CareServicesPage() {
           <FadeIn delay={150}>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
               <img
-                src="/images/iStock-509245916.jpg"
+                src={getImagePath("/images/iStock-509245916.jpg")}
                 alt="Care Services"
                 style={{ width: "100%", display: "block", objectFit: "cover" }}
               />

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { getImagePath } from "../lib/utils";
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -138,7 +139,7 @@ export default function StaffingPage() {
           <FadeIn delay={150}>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
               <img
-                src="/images/iStock-185084694.jpg"
+                src={getImagePath("/images/iStock-185084694.jpg")}
                 alt="Healthcare staff"
                 style={{ width: "100%", display: "block", objectFit: "cover" }}
               />
@@ -153,7 +154,7 @@ export default function StaffingPage() {
           <FadeIn>
             <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
               <img
-                src="/images/iStock-487536797.jpg"
+                src={getImagePath("/images/iStock-487536797.jpg")}
                 alt="Healthcare specialities"
                 style={{ width: "100%", display: "block", objectFit: "cover" }}
               />
