@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { getImagePath } from "../lib/utils";
@@ -67,14 +68,14 @@ export default function WorkForUsPage() {
           <p style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", color: "rgba(255,255,255,0.88)", lineHeight: 1.75, maxWidth: 640, margin: "0 auto 32px" }}>
             If you are a nurse, support worker or carer, looking to join a great reliable agency that supplies work in various locations.
           </p>
-          <a
+          <Link
             href="/register"
             style={{ display: "inline-block", background: "#fff", color: "#0984e3", borderRadius: 50, padding: "14px 40px", fontWeight: 700, fontSize: "0.95rem", fontFamily: "sans-serif", textDecoration: "none", boxShadow: "0 6px 22px rgba(0,0,0,0.15)", transition: "transform 0.2s, box-shadow 0.2s" }}
             onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px rgba(0,0,0,0.2)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 22px rgba(0,0,0,0.15)"; }}
           >
             Register Now
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -179,14 +180,14 @@ export default function WorkForUsPage() {
 
           <FadeIn delay={200}>
             <div style={{ textAlign: "center" }}>
-              <a
+              <Link
                 href="/register"
                 style={{ display: "inline-block", background: "#0984e3", color: "#fff", borderRadius: 50, padding: "14px 40px", fontWeight: 700, fontSize: "0.95rem", fontFamily: "sans-serif", textDecoration: "none", boxShadow: "0 6px 22px rgba(9,132,227,0.32)", transition: "transform 0.2s, background 0.2s" }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#076bbf"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#0984e3"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; }}
               >
                 Join Reach Healthcare
-              </a>
+              </Link>
             </div>
           </FadeIn>
         </div>

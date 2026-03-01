@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { getImagePath } from "../lib/utils";
@@ -66,14 +67,14 @@ export default function StaffingPage() {
           <p style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", color: "rgba(255,255,255,0.88)", lineHeight: 1.75, maxWidth: 720, margin: "0 auto 32px" }}>
             As an organisation we know how the little things make a huge difference and that&apos;s why we have searched out the best staffing team with versatile and transferable skills. Everyone who works for Reach Healthcare Solutions is highly qualified, professional and flexible to meeting our clients&apos; exact needs.
           </p>
-          <a
+          <Link
             href="/contact"
             style={{ display: "inline-block", background: "#fff", color: "#0984e3", borderRadius: 50, padding: "14px 40px", fontWeight: 700, fontSize: "0.95rem", fontFamily: "sans-serif", textDecoration: "none", boxShadow: "0 6px 22px rgba(0,0,0,0.15)", transition: "transform 0.2s, box-shadow 0.2s" }}
             onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px rgba(0,0,0,0.2)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 22px rgba(0,0,0,0.15)"; }}
           >
             Get in Touch
-          </a>
+          </Link>
         </div>
       </section>
 
