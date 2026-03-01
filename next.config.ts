@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   basePath: isProd ? '/reach-modern' : '',
   assetPrefix: isProd ? '/reach-modern' : '',
+  trailingSlash: true,
   images: {
     unoptimized: true,
   },
