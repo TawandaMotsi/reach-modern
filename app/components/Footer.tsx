@@ -136,6 +136,9 @@ export default function Footer() {
               Copyright © 2026 Reach Healthcare Solutions Limited, Registration Number: 11888752
             </p>
             <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.75rem", margin: 0 }}>
+              Developed by Tawanda Motsi
+            </p>
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.75rem", margin: 0 }}>
               {[
                 { label: "Downloads", href: "/downloads" },
                 { label: "Access Webmail", href: "https://webmail.300media.co.uk/" },
