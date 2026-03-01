@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { getImagePath } from "../lib/utils";
@@ -39,14 +40,14 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 export default function CareServicesPage() {
   const services = [
-    { img: getImagePath("/images/iStock-524910948.jpg"), title: "Children & Young People", desc: "Our team has practical experience in dealing with challenging behaviours like…", href: "/care-services/children" },
-    { img: getImagePath("/images/iStock-888167478.jpg"), title: "Domiciliary Care", desc: "Unforeseen circumstances can make the simplest activities of daily living challenging…", href: "/care-services/domicillary" },
-    { img: getImagePath("/images/iStock-842108572.jpg"), title: "Live-in Care", desc: "We believe that moving people away from their own homes where they've lived for many…", href: "/care-services/live-in" },
-    { img: getImagePath("/images/iStock-477715817.jpg"), title: "Hospital to Home", desc: "One of the leading causes of hospital readmission or slow post-hospitalisation…", href: "/care-services/hospital" },
-    { img: getImagePath("/images/shutterstock_168769925.jpg"), title: "Respite Care", desc: "Respite Care is temporary care, which provides family caregivers relief from the full-time…", href: "/care-services/respite" },
-    { img: getImagePath("/images/iStock-532529087.jpg"), title: "End of Life", desc: "We can provide comforting, end-of-life care for your loved one and assist the family during…", href: "/care-services/end-of-life" },
-    { img: getImagePath("/images/iStock-1149278960.jpg"), title: "Supported Living", desc: "Here at Reach Healthcare Solutions, we believe in enjoying a life that is full of purpose and realising…", href: "/care-services/supported" },
-    { img: getImagePath("/images/IMG-20210120-WA0015.jpg"), title: "Specialist Care", desc: "Reach Healthcare Solutions is a specialist care provider providing service for adult clients…", href: "/care-services/specialist" },
+    { img: getImagePath("/images/iStock-524910948.jpg"), title: "Children & Young People", desc: "Our team has practical experience in dealing with challenging behaviours like…", href: "children" },
+    { img: getImagePath("/images/iStock-888167478.jpg"), title: "Domiciliary Care", desc: "Unforeseen circumstances can make the simplest activities of daily living challenging…", href: "domicillary" },
+    { img: getImagePath("/images/iStock-842108572.jpg"), title: "Live-in Care", desc: "We believe that moving people away from their own homes where they've lived for many…", href: "live-in" },
+    { img: getImagePath("/images/iStock-477715817.jpg"), title: "Hospital to Home", desc: "One of the leading causes of hospital readmission or slow post-hospitalisation…", href: "hospital" },
+    { img: getImagePath("/images/shutterstock_168769925.jpg"), title: "Respite Care", desc: "Respite Care is temporary care, which provides family caregivers relief from the full-time…", href: "respite" },
+    { img: getImagePath("/images/iStock-532529087.jpg"), title: "End of Life", desc: "We can provide comforting, end-of-life care for your loved one and assist the family during…", href: "end-of-life" },
+    { img: getImagePath("/images/iStock-1149278960.jpg"), title: "Supported Living", desc: "Here at Reach Healthcare Solutions, we believe in enjoying a life that is full of purpose and realising…", href: "supported" },
+    { img: getImagePath("/images/IMG-20210120-WA0015.jpg"), title: "Specialist Care", desc: "Reach Healthcare Solutions is a specialist care provider providing service for adult clients…", href: "specialist" },
   ];
 
   return (
@@ -77,14 +78,14 @@ export default function CareServicesPage() {
           <p style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", color: "rgba(255,255,255,0.88)", lineHeight: 1.75, maxWidth: 640, margin: "0 auto 32px" }}>
             Providing compassionate, professional care services tailored to your individual needs, helping you or your loved ones live with dignity and independence.
           </p>
-          <a
+          <Link
             href="/contact"
             style={{ display: "inline-block", background: "#fff", color: "#0984e3", borderRadius: 50, padding: "14px 40px", fontWeight: 700, fontSize: "0.95rem", fontFamily: "sans-serif", textDecoration: "none", boxShadow: "0 6px 22px rgba(0,0,0,0.15)", transition: "transform 0.2s, box-shadow 0.2s" }}
             onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px rgba(0,0,0,0.2)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 22px rgba(0,0,0,0.15)"; }}
           >
             Get in Touch
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -129,7 +130,7 @@ export default function CareServicesPage() {
                   <div style={{ padding: "24px" }}>
                     <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#0a4d7c", marginBottom: 12, fontFamily: "sans-serif" }}>{service.title}</h3>
                     <p style={{ margin: "0 0 20px", lineHeight: 1.7, color: "#555", fontSize: "0.9rem", fontFamily: "sans-serif" }}>{service.desc}</p>
-                    <a
+                    <Link
                       href={service.href}
                       style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#0984e3", fontWeight: 600, fontSize: "0.88rem", fontFamily: "sans-serif", textDecoration: "none", transition: "gap 0.2s" }}
                       onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.gap = "12px"}
@@ -137,7 +138,7 @@ export default function CareServicesPage() {
                     >
                       Read More
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </FadeIn>
