@@ -1065,10 +1065,24 @@ export default function ApplicationPage() {
     setStep(s => Math.max(1, s - 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const submit = () => {
+  const submit = async () => {
     if (!form.privacyConsent) { alert("Please accept the Privacy Policy to submit."); return; }
-    setSubmitted(true);
-    topRef.current?.scrollIntoView({ behavior: "smooth" });
+    
+    try {
+      const response = await fetch('/api/submit-application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      
+      if (!response.ok) throw new Error('Submission failed');
+      
+      setSubmitted(true);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+    } catch (error) {
+      alert('Failed to submit application. Please try again.');
+      console.error(error);
+    }
   };
 
   // ── Submitted ──────────────────────────────────────────────────────────────
