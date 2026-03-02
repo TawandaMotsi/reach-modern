@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-$to = 'your-email@yourdomain.com'; // Replace with your email
+$to = 'info@reach-healthcare.com';
 $subject = 'New Application: ' . $data['firstName'] . ' ' . $data['lastName'];
 
 $message = "
@@ -34,7 +34,7 @@ $message = "
 
 $headers = "MIME-Version: 1.0\r\n";
 $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-$headers .= "From: noreply@yourdomain.com\r\n"; // Replace with your domain
+$headers .= "From: noreply@yreach-healthcare.com\r\n";
 
 if (mail($to, $subject, $message, $headers)) {
     echo json_encode(['success' => true, 'message' => 'Application submitted successfully']);
