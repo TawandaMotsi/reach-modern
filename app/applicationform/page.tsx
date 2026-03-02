@@ -1069,7 +1069,7 @@ export default function ApplicationPage() {
     if (!form.privacyConsent) { alert("Please accept the Privacy Policy to submit."); return; }
     
     try {
-      const response = await fetch('/api/submit-application', {
+      const response = await fetch('/submit.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -1077,8 +1077,7 @@ export default function ApplicationPage() {
       
       if (!response.ok) throw new Error('Submission failed');
       
-      setSubmitted(true);
-      topRef.current?.scrollIntoView({ behavior: "smooth" });
+      window.location.href = '/thank-you.html';
     } catch (error) {
       alert('Failed to submit application. Please try again.');
       console.error(error);
