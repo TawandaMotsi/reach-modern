@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: '/reach-modern',
-  trailingSlash: true,
   images: {
     unoptimized: true,
   },
