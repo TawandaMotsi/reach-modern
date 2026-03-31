@@ -8,7 +8,7 @@ import Footer from "../components/Footer";
 
 type Step = 1 | 2 | 3 | 4;
 
-interface FormData {
+interface AppFormData {
   // Step 1 – Personal Details
   role: string;
   title: string;
@@ -162,7 +162,7 @@ interface FormData {
   privacyConsent: boolean;
 }
 
-const initialForm: FormData = {
+const initialForm: AppFormData = {
   role: "", title: "", firstName: "", middleName: "", lastName: "",
   homePhone: "", mobileNo: "", email: "", dob: "", niNumber: "", nmcPin: "",
   rcnNumber: "", hpcNumber: "", band: "",
@@ -414,7 +414,7 @@ function StepBar({ current }: { current: Step }) {
 
 // ─── STEP 1: Personal Details ─────────────────────────────────────────────────
 
-function Step1({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void }) {
+function Step1({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => void }) {
   const titleOpts = ["Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof.", "Rev."].map(v => ({ value: v, label: v }));
   const bandOpts = ["Band 1","Band 2","Band 3","Band 4","Band 5","Band 6","Band 7","Band 8A","Band 8B","Band 8C","Band 8D","Band 9"].map(v => ({ value: v, label: v }));
   const availOpts = ["Mornings","Evenings","Afternoons","Occasional Weeks","Full Time","Part Time","Nights","Weekends","Anytime"];
@@ -661,7 +661,7 @@ function Step1({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void })
 
 // ─── STEP 2: Employment & Education ───────────────────────────────────────────
 
-function Step2({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void }) {
+function Step2({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => void }) {
   const RefBlock = ({ n, prefix }: { n: 1 | 2; prefix: "ref1" | "ref2" }) => (
     <div style={{ background: "#f7fafd", border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 18px" }}>
       <h4 style={{ margin: "0 0 16px", fontFamily: "'Georgia', serif", color: C.navy, fontSize: "0.95rem" }}>Reference {n}</h4>
@@ -729,7 +729,7 @@ function Step2({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void })
 
 // ─── STEP 3: Skills & Training ────────────────────────────────────────────────
 
-function Step3({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void }) {
+function Step3({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => void }) {
   const mandatoryOpts = ["Moving & Handling","Basic life support","Health and Safety","Fire Safety","First Aid","Infection Control","Food Safety & Nutrition","Medication Administration","Safeguarding Vulnerable Adults & Children"];
   const otherOpts = ["Diploma in Health & Social Care L3","Diploma in Health & Social Care L2","Personal Safety (Mental Health & Learning Disability)","Intermediate Life Support","Advanced Life Support","Complaints Handling","Handling Violence and Aggression","DoLs & Mental Capacity","COSHH","Data Protection","Equality & Inclusion","Lone Worker Training","Resuscitation of the Newborn (Midwifery)","Interpretation of Cardiotocograph Traces (Midwifery)"];
 
@@ -814,7 +814,7 @@ function Step3({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void })
 
 // ─── STEP 4: Declaration & Terms ──────────────────────────────────────────────
 
-function Step4({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void }) {
+function Step4({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => void }) {
   return (
     <div>
       {/* Health Declaration */}
@@ -1051,11 +1051,11 @@ function Step4({ f, set }: { f: FormData; set: (v: Partial<FormData>) => void })
 
 export default function ApplicationPage() {
   const [step, setStep] = useState<Step>(1);
-  const [form, setFormRaw] = useState<FormData>(initialForm);
+  const [form, setFormRaw] = useState<AppFormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
 
-  const set = (v: Partial<FormData>) => setFormRaw(p => ({ ...p, ...v }));
+  const set = (v: Partial<AppFormData>) => setFormRaw(p => ({ ...p, ...v }));
 
   const next = () => {
     setStep(s => Math.min(4, s + 1) as Step);
