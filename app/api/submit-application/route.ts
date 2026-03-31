@@ -6,8 +6,7 @@ import path from 'path';
 
 async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595, 842]); // A4
-  const { height } = page.getSize();
+  let page = pdfDoc.addPage([595, 842]);
 
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -16,51 +15,71 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   const white = rgb(1, 1, 1);
   const dark = rgb(0.2, 0.2, 0.2);
   const grey = rgb(0.4, 0.4, 0.4);
+  const lightGrey = rgb(0.96, 0.96, 0.96);
 
-  let y = height - 50;
+  let y = 792;
+
+  const checkPage = () => {
+    if (y < 80) {
+      page = pdfDoc.addPage([595, 842]);
+      y = 792;
+    }
+  };
+
+  // ── Header background ──
+  page.drawRectangle({ x: 0, y: 742, width: 595, height: 100, color: blue });
 
   // Logo
   const logoPath = path.join(process.cwd(), 'public', 'logo.png');
   if (fs.existsSync(logoPath)) {
     const logoBytes = fs.readFileSync(logoPath);
     const logo = await pdfDoc.embedPng(logoBytes);
-    const logoDims = logo.scale(0.15);
-    page.drawImage(logo, { x: 50, y: y - logoDims.height, width: logoDims.width, height: logoDims.height });
+    const logoDims = logo.scale(0.13);
+    page.drawImage(logo, { x: 30, y: 762, width: logoDims.width, height: logoDims.height });
   }
 
-  // Company info top right
-  page.drawText('Design Centre Suite 145A, 52 Upper Street', { x: 350, y, font: regular, size: 8, color: grey });
-  page.drawText('Islington, London N1 0QH', { x: 350, y: y - 12, font: regular, size: 8, color: grey });
-  page.drawText('T: 0203 441 5474', { x: 350, y: y - 24, font: regular, size: 8, color: grey });
-  page.drawText('www.reach-healthcare.com', { x: 350, y: y - 36, font: regular, size: 8, color: grey });
+  // Company info — right side of header
+  const infoX = 340;
+  page.drawText('Design Centre Suite 145A', { x: infoX, y: 820, font: regular, size: 8, color: white });
+  page.drawText('52 Upper Street, Islington', { x: infoX, y: 808, font: regular, size: 8, color: white });
+  page.drawText('London N1 0QH', { x: infoX, y: 796, font: regular, size: 8, color: white });
+  page.drawText('T: 0203 441 5474', { x: infoX, y: 784, font: regular, size: 8, color: white });
+  page.drawText('www.reach-healthcare.com', { x: infoX, y: 772, font: regular, size: 8, color: white });
+  page.drawText('recruitment@reach-healthcare.com', { x: infoX, y: 760, font: regular, size: 8, color: white });
 
-  y -= 70;
+  y = 730;
 
-  // Blue divider
-  page.drawRectangle({ x: 50, y, width: 495, height: 2, color: blue });
+  // Title block
+  page.drawText('JOB APPLICATION FORM', { x: 50, y, font: bold, size: 18, color: blue });
+  y -= 20;
+  page.drawText(`Role Applied For: ${data.role || ''}`, { x: 50, y, font: regular, size: 11, color: dark });
+  y -= 8;
+  page.drawRectangle({ x: 50, y, width: 495, height: 1.5, color: blue });
   y -= 20;
 
-  // Title
-  page.drawText('JOB APPLICATION FORM', { x: 175, y, font: bold, size: 16, color: blue });
-  y -= 18;
-  page.drawText(`Role: ${data.role || ''}`, { x: 220, y, font: regular, size: 11, color: dark });
-  y -= 25;
-
   const section = (title: string) => {
-    page.drawRectangle({ x: 50, y: y - 4, width: 495, height: 18, color: blue });
-    page.drawText(title, { x: 55, y, font: bold, size: 10, color: white });
-    y -= 24;
+    checkPage();
+    y -= 6;
+    page.drawRectangle({ x: 50, y: y - 2, width: 495, height: 20, color: blue });
+    page.drawText(title, { x: 56, y: y + 4, font: bold, size: 10, color: white });
+    y -= 26;
   };
 
+  let rowCount = 0;
   const field = (label: string, value: unknown) => {
-    if (!value) return;
-    page.drawText(`${label}:`, { x: 55, y, font: bold, size: 9, color: grey });
-    page.drawText(String(value).substring(0, 80), { x: 200, y, font: regular, size: 9, color: dark });
-    y -= 14;
-    if (y < 60) { pdfDoc.addPage([595, 842]); y = 800; }
+    if (value === null || value === undefined || value === '') return;
+    checkPage();
+    if (rowCount % 2 === 0) {
+      page.drawRectangle({ x: 50, y: y - 3, width: 495, height: 16, color: lightGrey });
+    }
+    page.drawText(`${label}:`, { x: 56, y, font: bold, size: 9, color: grey });
+    page.drawText(String(value).substring(0, 85), { x: 200, y, font: regular, size: 9, color: dark });
+    y -= 16;
+    rowCount++;
   };
 
   section('PERSONAL DETAILS');
+  rowCount = 0;
   field('Full Name', `${data.title || ''} ${data.firstName} ${data.middleName || ''} ${data.lastName}`.trim());
   field('Date of Birth', data.dob);
   field('Gender', data.gender);
@@ -68,10 +87,12 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   field('NI Number', data.niNumber);
   field('NMC Pin', data.nmcPin);
   field('Mobile', data.mobileNo);
+  field('Home Phone', data.homePhone);
   field('Email', data.email);
   field('Address', `${data.streetAddress}, ${data.city}, ${data.county}, ${data.postcode}`);
 
   section('EMPLOYMENT ELIGIBILITY');
+  rowCount = 0;
   field('Permitted to Work in UK', data.permittedToWork);
   field('Right to Work Proof', data.rightToWorkProof);
   field('Visa Type', data.visaType);
@@ -79,17 +100,20 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   field('Passport No', data.passportNo);
 
   section('DRIVING');
+  rowCount = 0;
   field('Full Driving Licence', data.hasFullLicence);
   field('Licence No', data.drivingLicenceNo);
   field('Car Available for Work', data.hasCarForWork);
 
   section('NEXT OF KIN');
+  rowCount = 0;
   field('Name', `${data.nokFirstName || ''} ${data.nokLastName || ''}`.trim());
   field('Relationship', data.nokRelationship);
   field('Phone', data.nokMobile);
   field('Email', data.nokEmail);
 
   section('REFERENCES');
+  rowCount = 0;
   field('Reference 1', `${data.ref1FirstName || ''} ${data.ref1LastName || ''} (${data.ref1Relationship || ''})`);
   field('Ref 1 Email', data.ref1Email);
   field('Ref 1 Phone', data.ref1Phone);
@@ -98,6 +122,7 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   field('Ref 2 Phone', data.ref2Phone);
 
   section('TRAINING & DBS');
+  rowCount = 0;
   field('Mandatory Training', Array.isArray(data.mandatoryTraining) ? (data.mandatoryTraining as string[]).join(', ') : '');
   field('DBS Check', data.hasDbs);
   field('DBS Clear', data.dbsClear);
@@ -105,21 +130,23 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   field('DBS Disclosure No', data.dbsDisclosureNumber);
 
   section('HEALTH DECLARATION');
+  rowCount = 0;
   field('Long Term Illness', data.longTermIllness);
   field('Registered Disabled', data.registeredDisabled);
   field('BCG Vaccination', data.bcgVaccination);
   field('Hepatitis B', data.hepatitisB);
 
   section('DECLARATION');
+  rowCount = 0;
   field('Declared By', data.declarationFullName);
   field('Date', data.declarationDate);
   field('Privacy Consent', data.privacyConsent ? 'Yes' : 'No');
 
   // Footer
-  y -= 10;
+  y -= 16;
   page.drawRectangle({ x: 50, y, width: 495, height: 1, color: blue });
   y -= 14;
-  page.drawText('Reach Healthcare Solutions Limited | Registration No: 11888752 | CQC Regulated', { x: 100, y, font: regular, size: 8, color: grey });
+  page.drawText('Reach Healthcare Solutions Limited | Registration No: 11888752 | CQC Regulated', { x: 90, y, font: regular, size: 8, color: grey });
 
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes);
