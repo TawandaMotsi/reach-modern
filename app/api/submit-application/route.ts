@@ -1,129 +1,128 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import PDFDocument from 'pdfkit';
-import path from 'path';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import fs from 'fs';
+import path from 'path';
 
-function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 50, size: 'A4' });
-    const chunks: Buffer[] = [];
-    doc.on('data', (chunk) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([595, 842]); // A4
+  const { height } = page.getSize();
 
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png');
-    const blue = '#0a4d7c';
+  const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    // Header / Letterhead
-    if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, 50, 40, { height: 50 });
-    }
-    doc.fontSize(9).fillColor('#555')
-      .text('Design Centre Suite 145A, 52 Upper Street, Islington, London N1 0QH', 300, 45, { align: 'right' })
-      .text('T: 0203 441 5474  |  E: recruitment@reach-healthcare.com', { align: 'right' })
-      .text('www.reach-healthcare.com', { align: 'right' });
+  const blue = rgb(0.04, 0.30, 0.49);
+  const white = rgb(1, 1, 1);
+  const dark = rgb(0.2, 0.2, 0.2);
+  const grey = rgb(0.4, 0.4, 0.4);
 
-    doc.moveDown(2);
-    doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor(blue).lineWidth(2).stroke();
-    doc.moveDown(0.5);
+  let y = height - 50;
 
-    // Title
-    doc.fontSize(16).fillColor(blue).font('Helvetica-Bold')
-      .text('JOB APPLICATION FORM', { align: 'center' });
-    doc.fontSize(11).fillColor('#333').font('Helvetica')
-      .text(`Role: ${data.role || ''}`, { align: 'center' });
-    doc.moveDown(1);
+  // Logo
+  const logoPath = path.join(process.cwd(), 'public', 'logo.png');
+  if (fs.existsSync(logoPath)) {
+    const logoBytes = fs.readFileSync(logoPath);
+    const logo = await pdfDoc.embedPng(logoBytes);
+    const logoDims = logo.scale(0.15);
+    page.drawImage(logo, { x: 50, y: y - logoDims.height, width: logoDims.width, height: logoDims.height });
+  }
 
-    const section = (title: string) => {
-      doc.moveDown(0.5);
-      doc.rect(50, doc.y, 495, 18).fill(blue);
-      doc.fontSize(10).fillColor('#fff').font('Helvetica-Bold')
-        .text(title, 55, doc.y - 14);
-      doc.fillColor('#333').font('Helvetica').fontSize(9);
-      doc.moveDown(0.3);
-    };
+  // Company info top right
+  page.drawText('Design Centre Suite 145A, 52 Upper Street', { x: 350, y, font: regular, size: 8, color: grey });
+  page.drawText('Islington, London N1 0QH', { x: 350, y: y - 12, font: regular, size: 8, color: grey });
+  page.drawText('T: 0203 441 5474', { x: 350, y: y - 24, font: regular, size: 8, color: grey });
+  page.drawText('www.reach-healthcare.com', { x: 350, y: y - 36, font: regular, size: 8, color: grey });
 
-    const field = (label: string, value: unknown) => {
-      if (!value) return;
-      doc.fontSize(9).font('Helvetica-Bold').fillColor('#555').text(`${label}: `, { continued: true })
-        .font('Helvetica').fillColor('#333').text(String(value));
-    };
+  y -= 70;
 
-    // Personal Details
-    section('PERSONAL DETAILS');
-    field('Full Name', `${data.title || ''} ${data.firstName} ${data.middleName || ''} ${data.lastName}`.trim());
-    field('Date of Birth', data.dob as string);
-    field('Gender', data.gender as string);
-    field('Nationality', data.nationality as string);
-    field('NI Number', data.niNumber as string);
-    field('NMC Pin', data.nmcPin as string);
-    field('Mobile', data.mobileNo as string);
-    field('Home Phone', data.homePhone as string);
-    field('Email', data.email as string);
-    field('Address', `${data.streetAddress}, ${data.city}, ${data.county}, ${data.postcode}`);
+  // Blue divider
+  page.drawRectangle({ x: 50, y, width: 495, height: 2, color: blue });
+  y -= 20;
 
-    // Employment Eligibility
-    section('EMPLOYMENT ELIGIBILITY');
-    field('Permitted to Work in UK', data.permittedToWork as string);
-    field('Right to Work Proof', data.rightToWorkProof as string);
-    field('Visa Type', data.visaType as string);
-    field('Visa Expiry', data.visaExpiryDate as string);
-    field('Passport No', data.passportNo as string);
+  // Title
+  page.drawText('JOB APPLICATION FORM', { x: 175, y, font: bold, size: 16, color: blue });
+  y -= 18;
+  page.drawText(`Role: ${data.role || ''}`, { x: 220, y, font: regular, size: 11, color: dark });
+  y -= 25;
 
-    // Driving
-    section('DRIVING');
-    field('Full Driving Licence', data.hasFullLicence as string);
-    field('Licence No', data.drivingLicenceNo as string);
-    field('Car Available for Work', data.hasCarForWork as string);
+  const section = (title: string) => {
+    page.drawRectangle({ x: 50, y: y - 4, width: 495, height: 18, color: blue });
+    page.drawText(title, { x: 55, y, font: bold, size: 10, color: white });
+    y -= 24;
+  };
 
-    // Next of Kin
-    section('NEXT OF KIN');
-    field('Name', `${data.nokFirstName || ''} ${data.nokLastName || ''}`.trim());
-    field('Relationship', data.nokRelationship as string);
-    field('Phone', data.nokMobile as string);
-    field('Email', data.nokEmail as string);
+  const field = (label: string, value: unknown) => {
+    if (!value) return;
+    page.drawText(`${label}:`, { x: 55, y, font: bold, size: 9, color: grey });
+    page.drawText(String(value).substring(0, 80), { x: 200, y, font: regular, size: 9, color: dark });
+    y -= 14;
+    if (y < 60) { pdfDoc.addPage([595, 842]); y = 800; }
+  };
 
-    // References
-    section('REFERENCES');
-    field('Reference 1', `${data.ref1FirstName || ''} ${data.ref1LastName || ''} (${data.ref1Relationship || ''})`);
-    field('Ref 1 Email', data.ref1Email as string);
-    field('Ref 1 Phone', data.ref1Phone as string);
-    field('Reference 2', `${data.ref2FirstName || ''} ${data.ref2LastName || ''} (${data.ref2Relationship || ''})`);
-    field('Ref 2 Email', data.ref2Email as string);
-    field('Ref 2 Phone', data.ref2Phone as string);
+  section('PERSONAL DETAILS');
+  field('Full Name', `${data.title || ''} ${data.firstName} ${data.middleName || ''} ${data.lastName}`.trim());
+  field('Date of Birth', data.dob);
+  field('Gender', data.gender);
+  field('Nationality', data.nationality);
+  field('NI Number', data.niNumber);
+  field('NMC Pin', data.nmcPin);
+  field('Mobile', data.mobileNo);
+  field('Email', data.email);
+  field('Address', `${data.streetAddress}, ${data.city}, ${data.county}, ${data.postcode}`);
 
-    // Training & DBS
-    section('TRAINING & DBS');
-    field('Mandatory Training Completed', data.completedMandatoryTraining as string);
-    field('Mandatory Training', Array.isArray(data.mandatoryTraining) ? (data.mandatoryTraining as string[]).join(', ') : '');
-    field('DBS Check', data.hasDbs as string);
-    field('DBS Clear', data.dbsClear as string);
-    field('DBS Issue Date', data.dbsIssueDate as string);
-    field('DBS Disclosure No', data.dbsDisclosureNumber as string);
+  section('EMPLOYMENT ELIGIBILITY');
+  field('Permitted to Work in UK', data.permittedToWork);
+  field('Right to Work Proof', data.rightToWorkProof);
+  field('Visa Type', data.visaType);
+  field('Visa Expiry', data.visaExpiryDate);
+  field('Passport No', data.passportNo);
 
-    // Health
-    section('HEALTH DECLARATION');
-    field('Long Term Illness', data.longTermIllness as string);
-    field('Registered Disabled', data.registeredDisabled as string);
-    field('BCG Vaccination', data.bcgVaccination as string);
-    field('Hepatitis B', data.hepatitisB as string);
+  section('DRIVING');
+  field('Full Driving Licence', data.hasFullLicence);
+  field('Licence No', data.drivingLicenceNo);
+  field('Car Available for Work', data.hasCarForWork);
 
-    // Declaration
-    section('DECLARATION');
-    field('Declared By', data.declarationFullName as string);
-    field('Date', data.declarationDate as string);
-    field('Privacy Consent', data.privacyConsent ? 'Yes' : 'No');
+  section('NEXT OF KIN');
+  field('Name', `${data.nokFirstName || ''} ${data.nokLastName || ''}`.trim());
+  field('Relationship', data.nokRelationship);
+  field('Phone', data.nokMobile);
+  field('Email', data.nokEmail);
 
-    // Footer
-    doc.moveDown(2);
-    doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor(blue).lineWidth(1).stroke();
-    doc.moveDown(0.3);
-    doc.fontSize(8).fillColor('#888')
-      .text('Reach Healthcare Solutions Limited | Registration No: 11888752 | CQC Regulated', { align: 'center' });
+  section('REFERENCES');
+  field('Reference 1', `${data.ref1FirstName || ''} ${data.ref1LastName || ''} (${data.ref1Relationship || ''})`);
+  field('Ref 1 Email', data.ref1Email);
+  field('Ref 1 Phone', data.ref1Phone);
+  field('Reference 2', `${data.ref2FirstName || ''} ${data.ref2LastName || ''} (${data.ref2Relationship || ''})`);
+  field('Ref 2 Email', data.ref2Email);
+  field('Ref 2 Phone', data.ref2Phone);
 
-    doc.end();
-  });
+  section('TRAINING & DBS');
+  field('Mandatory Training', Array.isArray(data.mandatoryTraining) ? (data.mandatoryTraining as string[]).join(', ') : '');
+  field('DBS Check', data.hasDbs);
+  field('DBS Clear', data.dbsClear);
+  field('DBS Issue Date', data.dbsIssueDate);
+  field('DBS Disclosure No', data.dbsDisclosureNumber);
+
+  section('HEALTH DECLARATION');
+  field('Long Term Illness', data.longTermIllness);
+  field('Registered Disabled', data.registeredDisabled);
+  field('BCG Vaccination', data.bcgVaccination);
+  field('Hepatitis B', data.hepatitisB);
+
+  section('DECLARATION');
+  field('Declared By', data.declarationFullName);
+  field('Date', data.declarationDate);
+  field('Privacy Consent', data.privacyConsent ? 'Yes' : 'No');
+
+  // Footer
+  y -= 10;
+  page.drawRectangle({ x: 50, y, width: 495, height: 1, color: blue });
+  y -= 14;
+  page.drawText('Reach Healthcare Solutions Limited | Registration No: 11888752 | CQC Regulated', { x: 100, y, font: regular, size: 8, color: grey });
+
+  const pdfBytes = await pdfDoc.save();
+  return Buffer.from(pdfBytes);
 }
 
 export async function POST(request: Request) {
