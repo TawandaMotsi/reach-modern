@@ -154,7 +154,20 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
+    const formData = await request.formData();
+    const data = JSON.parse(formData.get('data') as string) as Record<string, unknown>;
+
+    // Collect uploaded files
+    const fileFields = ['idPhoto', 'passportCopy', 'proofOfAddress', 'cvFile', 'trainingCert'];
+    const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
+
+    for (const field of fileFields) {
+      const file = formData.get(field) as File | null;
+      if (file && file.size > 0) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        attachments.push({ filename: file.name, content: buffer, contentType: file.type });
+      }
+    }
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || 'smtp.reach-healthcare.com',
@@ -207,6 +220,7 @@ export async function POST(request: Request) {
           content: pdfBuffer,
           contentType: 'application/pdf',
         },
+        ...attachments,
       ],
     });
 

@@ -1069,10 +1069,19 @@ export default function ApplicationPage() {
     if (!form.privacyConsent) { alert("Please accept the Privacy Policy to submit."); return; }
     
     try {
+      const fd = new FormData();
+      // Append all non-file fields as JSON
+      const { idPhoto, passportCopy, proofOfAddress, cvFile, trainingCert, ...rest } = form;
+      fd.append('data', JSON.stringify(rest));
+      if (idPhoto) fd.append('idPhoto', idPhoto);
+      if (passportCopy) fd.append('passportCopy', passportCopy);
+      if (proofOfAddress) fd.append('proofOfAddress', proofOfAddress);
+      if (cvFile) fd.append('cvFile', cvFile);
+      if (trainingCert) fd.append('trainingCert', trainingCert);
+
       const response = await fetch('/api/submit-application', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: fd,
       });
       
       if (!response.ok) throw new Error('Submission failed');
