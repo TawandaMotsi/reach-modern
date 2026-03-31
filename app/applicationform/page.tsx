@@ -1077,7 +1077,10 @@ export default function ApplicationPage() {
       
       if (!response.ok) throw new Error('Submission failed');
       
-      window.location.href = '/thank-you.html';
+      setForm({ ...initialForm });
+      setStep(1);
+      alert(`Thank you, ${form.firstName}! Your application has been received. We will be in touch within 2–3 working days.`);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       alert('Failed to submit application. Please try again.');
       console.error(error);
