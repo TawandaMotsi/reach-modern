@@ -1069,7 +1069,7 @@ export default function ApplicationPage() {
     if (!form.privacyConsent) { alert("Please accept the Privacy Policy to submit."); return; }
     
     try {
-      const response = await fetch('/submit.php', {
+      const response = await fetch('/api/submit-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
