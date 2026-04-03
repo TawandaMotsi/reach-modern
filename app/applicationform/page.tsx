@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -1050,6 +1051,7 @@ function Step4({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
 }
 
 export default function ApplicationPage() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const [form, setFormRaw] = useState<AppFormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
@@ -1086,10 +1088,10 @@ export default function ApplicationPage() {
       
       if (!response.ok) throw new Error('Submission failed');
       
-      setForm({ ...initialForm });
+      setFormRaw({ ...initialForm });
       setStep(1);
       alert(`Thank you, ${form.firstName}! Your application has been received. We will be in touch within 2–3 working days.`);
-      topRef.current?.scrollIntoView({ behavior: "smooth" });
+      router.push('/register');
     } catch (error) {
       alert('Failed to submit application. Please try again.');
       console.error(error);
