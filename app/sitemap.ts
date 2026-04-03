@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const base = "https://www.reachhealthcaresolutions.co.uk";
+const base = "https://www.www.reach-healthcare.com";
 
 const routes = [
   "/",
