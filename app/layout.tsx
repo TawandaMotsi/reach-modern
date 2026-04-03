@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Chatbot from "./components/Chatbot";
@@ -16,7 +16,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Reach Healthcare Solutions | Quality Care & Staffing Services",
   description: "Professional healthcare staffing and home care services. We provide nurses, care assistants, and support workers for children, young people, and adults.",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+  openGraph: {
+    title: "Reach Healthcare Solutions | Quality Care & Staffing Services",
+    description: "Professional healthcare staffing and home care services. We provide nurses, care assistants, and support workers for children, young people, and adults.",
+    url: "https://www.reachhealthcaresolutions.co.uk",
+    siteName: "Reach Healthcare Solutions",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
