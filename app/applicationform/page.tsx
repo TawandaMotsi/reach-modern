@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -1055,7 +1055,15 @@ export default function ApplicationPage() {
   const [step, setStep] = useState<Step>(1);
   const [form, setFormRaw] = useState<AppFormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
+  const [successName, setSuccessName] = useState("");
   const topRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (successName) {
+      const t = setTimeout(() => router.replace('/register'), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [successName, router]);
 
   const set = (v: Partial<AppFormData>) => setFormRaw(p => ({ ...p, ...v }));
 
@@ -1088,38 +1096,36 @@ export default function ApplicationPage() {
       
       if (!response.ok) throw new Error('Submission failed');
       
+      const name = form.firstName;
       setFormRaw({ ...initialForm });
       setStep(1);
-      alert(`Thank you, ${form.firstName}! Your application has been received. We will be in touch within 2–3 working days.`);
-      router.push('/register');
+      setSuccessName(name);
     } catch (error) {
       alert('Failed to submit application. Please try again.');
       console.error(error);
     }
   };
 
-  // ── Submitted ──────────────────────────────────────────────────────────────
-  if (submitted) return (
-    <main style={{ minHeight: "80vh", background: C.bgPage, display: "flex", alignItems: "center", justifyContent: "center", padding: "60px 24px" }}>
-      <div style={{ textAlign: "center", maxWidth: 500 }}>
-        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#e6f9ee", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
-          <svg width="36" height="36" fill="none" viewBox="0 0 36 36">
-            <path d="M6 18L14 26L30 10" stroke={C.green} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+  // ── Success Overlay ─────────────────────────────────────────────────────────
+  const successOverlay = successName ? (
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(6,46,79,0.6)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", animation: "fadeIn .3s ease" }}>
+      <style>{`@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}`}</style>
+      <div style={{ background: "#fff", borderRadius: 16, padding: "48px 40px", textAlign: "center", maxWidth: 440, width: "90%", boxShadow: "0 20px 60px rgba(0,0,0,0.25)" }}>
+        <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#e6f9ee", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+          <svg width="32" height="32" fill="none" viewBox="0 0 36 36"><path d="M6 18L14 26L30 10" stroke={C.green} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </div>
-        <h1 style={{ fontFamily: "'Georgia', serif", color: C.navy, fontSize: "clamp(1.6rem,3vw,2.2rem)", marginBottom: 16 }}>Application Submitted!</h1>
-        <p style={{ color: C.textMuted, fontFamily: "'Lato', sans-serif", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: 28 }}>
-          Thank you, <strong style={{ color: C.text }}>{form.firstName}</strong>. Your full application has been received by the Reach Healthcare team. We will review your details and be in touch within 2–3 working days.
+        <h2 style={{ fontFamily: "'Georgia', serif", color: C.navy, fontSize: "1.5rem", marginBottom: 10 }}>Application Submitted!</h2>
+        <p style={{ color: C.textMuted, fontSize: "0.92rem", lineHeight: 1.7, marginBottom: 24 }}>
+          Thank you, <strong style={{ color: C.text }}>{successName}</strong>. We&apos;ve received your application and will be in touch within 2–3 working days.
         </p>
-        <a href="/" style={{ display: "inline-block", background: C.blue, color: "#fff", borderRadius: 50, padding: "14px 36px", textDecoration: "none", fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: "0.92rem", boxShadow: "0 4px 18px rgba(9,132,227,0.3)" }}>
-          Return to Home
-        </a>
+        <p style={{ color: C.textMuted, fontSize: "0.8rem" }}>Redirecting to registration…</p>
       </div>
-    </main>
-  );
+    </div>
+  ) : null;
 
   return (
     <main style={{ background: C.bgPage, fontFamily: "'Lato', sans-serif", overflowX: "hidden" }}>
+      {successOverlay}
       <Header />
       {/* Hero */}
       <section style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.blueMid} 55%, ${C.blue} 100%)`, padding: "80px 24px 52px", textAlign: "center" }}>
