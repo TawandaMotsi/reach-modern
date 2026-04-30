@@ -73,7 +73,7 @@ export default function Footer() {
               </h4>
               <div style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.875rem", lineHeight: 2 }}>
                 <p>T: <a href="tel:02034415474" style={{ color: "inherit", textDecoration: "none" }}>0203 441 5474</a></p>
-                <p>E: <a href="mailto:info@reach-healthcare.com" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "none" }}>info@reach-healthcare.com</a></p>
+                <p>E: <a href="mailto:infor@reach-healthcare.com" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "none" }}>info@reach-healthcare.com</a></p>
                 <p>E: <a href="mailto:recruitment@reach-healthcare.com" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "none" }}>recruitment@reach-healthcare.com</a></p>
               </div>
             </div>
