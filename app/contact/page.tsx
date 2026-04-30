@@ -235,7 +235,7 @@ export default function ContactPage() {
                 label="Email Us"
                 icon={<svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M3 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="#0984e3" strokeWidth="1.5" /><polyline points="1,4 10,11 19,4" stroke="#0984e3" strokeWidth="1.5" /></svg>}
               >
-                <a href="mailto:info@reach-healthcare.com" style={{ color: "#0984e3", textDecoration: "none", display: "block" }}>info@reach-healthcare.com</a>
+                <a href="mailto:infor@reach-healthcare.com" style={{ color: "#0984e3", textDecoration: "none", display: "block" }}>info@reach-healthcare.com</a>
                 <a href="mailto:recruitment@reach-healthcare.com" style={{ color: "#0984e3", textDecoration: "none", display: "block" }}>recruitment@reach-healthcare.com</a>
               </InfoCard>
 
