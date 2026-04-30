@@ -13,7 +13,7 @@ export default function Chatbot() {
   const quickReplies = [
     { text: "Care Services", response: "We offer domiciliary care, live-in care, respite care, and specialist care. Would you like to know more about any specific service?" },
     { text: "Work With Us", response: "We're always looking for qualified nurses, care assistants, and support workers. Visit our Work For Us page or click Register to apply." },
-    { text: "Contact Info", response: "Call us 24/7 at 0203 441 5474 or email info@reach-healthcare.com. Our office is at Business Design Centre, 52 Upper Street, London N1 0QH." },
+    { text: "Contact Info", response: "Call us 24/7 at 0203 441 5474 or email infor@reach-healthcare.com. Our office is at Business Design Centre, 52 Upper Street, London N1 0QH." },
     { text: "Book Assessment", response: "Great! We offer free, no-obligation care assessments. Please call us at 0203 441 5474 or visit our Contact page to schedule." },
   ];
 
@@ -51,7 +51,7 @@ export default function Chatbot() {
     const lower = msg.toLowerCase();
     if (lower.includes("care") || lower.includes("service")) return "We provide domiciliary care, live-in care, children & young people care, hospital to home, respite care, end of life care, supported living, and specialist care. Which would you like to know more about?";
     if (lower.includes("work") || lower.includes("job") || lower.includes("recruit")) return "We're recruiting nurses, care assistants, and support workers. We offer flexible hours, competitive pay, and great benefits. Visit our Work For Us page to learn more!";
-    if (lower.includes("contact") || lower.includes("phone") || lower.includes("email")) return "You can reach us 24/7 at 0203 441 5474 or email info@reach-healthcare.com. We're here to help!";
+    if (lower.includes("contact") || lower.includes("phone") || lower.includes("email")) return "You can reach us 24/7 at 0203 441 5474 or email infor@reach-healthcare.com. We're here to help!";
     if (lower.includes("price") || lower.includes("cost")) return "Our pricing varies based on your specific care needs. Please contact us for a free assessment and personalized quote.";
     if (lower.includes("location") || lower.includes("where")) return "We're based in London at Business Design Centre, 52 Upper Street, Islington, N1 0QH. We provide services across the UK.";
     return "I'd be happy to help! You can ask about our care services, job opportunities, or contact information. Or call us at 0203 441 5474 for immediate assistance.";

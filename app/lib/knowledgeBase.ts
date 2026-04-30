@@ -2,7 +2,7 @@ export const knowledgeBase = {
   company: {
     name: "Reach Healthcare Solutions",
     phone: "0203 441 5474",
-    email: "info@reach-healthcare.com",
+    email: "infor@reach-healthcare.com",
     recruitmentEmail: "recruitment@reach-healthcare.com",
     address: "Business Design Centre Suite 145A, 52 Upper Street, Islington, London, England, N1 0QH",
     hours: "24/7 availability for care, Office: Monday-Friday 9:00am-5:00pm",

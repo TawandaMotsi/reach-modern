@@ -4,7 +4,7 @@
 
 - **Name:** Reach Healthcare Solutions
 - **Phone:** 0203 441 5474 (24/7)
-- **Email:** info@reach-healthcare.com
+- **Email:** infor@reach-healthcare.com
 - **Recruitment Email:** recruitment@reach-healthcare.com
 - **Address:** Business Design Centre Suite 145A, 52 Upper Street, Islington, London, England, N1 0QH
 - **Office Hours:** Monday–Friday, 9:00am–5:00pm (care available 24/7)
