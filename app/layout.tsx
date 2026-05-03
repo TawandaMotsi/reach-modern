@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Reach Healthcare Solutions | Quality Care & Staffing Services",
     description: "Professional healthcare staffing and home care services. We provide nurses, care assistants, and support workers for children, young people, and adults.",
-    url: "https://www.www.reach-healthcare.com",
+    url: "https://www.reach-healthcare.com",
     siteName: "Reach Healthcare Solutions",
     type: "website",
   },
