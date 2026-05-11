@@ -263,7 +263,6 @@ export default function RegisterPage() {
                   If you have any questions or face any problems, please don&apos;t hesitate to contact our recruitment team.
                 </p>
 
-                <CheckItem text="Quick 2-minute registration" />
                 <CheckItem text="Dedicated recruitment support team" />
                 <CheckItem text="Flexible shifts to suit your lifestyle" />
                 <CheckItem text="Competitive rates of pay" />
