@@ -274,13 +274,12 @@ function TextInput({ name, value, onChange, placeholder, type = "text", required
   name: string; value: string; onChange: (v: string) => void;
   placeholder?: string; type?: string; required?: boolean;
 }) {
-  const [f, setF] = useState(false);
   return (
     <input type={type} value={value} placeholder={placeholder}
       required={required}
       onChange={e => onChange(e.target.value)}
-      onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={fieldStyle(f)} />
+      style={fieldStyle(false)}
+      className="app-field" />
   );
 }
 
@@ -288,11 +287,10 @@ function Select({ value, onChange, options, placeholder }: {
   value: string; onChange: (v: string) => void;
   options: { value: string; label: string }[]; placeholder?: string;
 }) {
-  const [f, setF] = useState(false);
   return (
     <select value={value} onChange={e => onChange(e.target.value)}
-      onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={selectStyle(f)}>
+      style={selectStyle(false)}
+      className="app-field">
       {placeholder && <option value="">{placeholder}</option>}
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
@@ -339,28 +337,27 @@ function CheckGroup({ options, selected, onChange }: {
 function Textarea({ value, onChange, placeholder, rows = 4 }: {
   value: string; onChange: (v: string) => void; placeholder?: string; rows?: number;
 }) {
-  const [f, setF] = useState(false);
   return (
     <textarea value={value} onChange={e => onChange(e.target.value)}
       placeholder={placeholder} rows={rows}
-      onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ ...fieldStyle(f), resize: "vertical" as const }} />
+      style={{ ...fieldStyle(false), resize: "vertical" as const }}
+      className="app-field" />
   );
 }
 
-function FileInput({ label, onChange }: { label: string; onChange: (f: File | null) => void }) {
+function FileInput({ label, onChange, fileName }: { label: string; onChange: (f: File | null) => void; fileName?: string }) {
   const ref = useRef<HTMLInputElement>(null);
-  const [name, setName] = useState<string>("");
+  const displayName = fileName || "";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
       <input ref={ref} type="file" style={{ display: "none" }}
-        onChange={e => { const f = e.target.files?.[0] || null; setName(f?.name || ""); onChange(f); }} />
+        onChange={e => { const f = e.target.files?.[0] || null; onChange(f); }} />
       <button type="button" onClick={() => ref.current?.click()}
         style={{ padding: "9px 18px", borderRadius: 8, border: `1.5px solid ${C.border}`, background: C.bgField, color: C.textMuted, fontFamily: "'Lato', sans-serif", fontSize: "0.82rem", cursor: "pointer" }}>
         Choose File
       </button>
-      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", color: name ? C.text : C.textMuted }}>
-        {name || "No file chosen"}
+      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", color: displayName ? C.text : C.textMuted }}>
+        {displayName || "No file chosen"}
       </span>
     </div>
   );
@@ -464,18 +461,22 @@ function Step1({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
         <Field label="National Insurance No" required>
           <TextInput name="niNumber" value={f.niNumber} onChange={v => set({ niNumber: v })} placeholder="AB 12 34 56 C" />
         </Field>
-        <Field label="NMC Pin No" required>
-          <TextInput name="nmcPin" value={f.nmcPin} onChange={v => set({ nmcPin: v })} />
-        </Field>
-        <Field label="RCN Number" required>
-          <TextInput name="rcnNumber" value={f.rcnNumber} onChange={v => set({ rcnNumber: v })} />
-        </Field>
-        <Field label="HPC Number" required>
-          <TextInput name="hpcNumber" value={f.hpcNumber} onChange={v => set({ hpcNumber: v })} />
-        </Field>
-        <Field label="Band" required>
-          <Select value={f.band} onChange={v => set({ band: v })} placeholder="Please select" options={bandOpts} />
-        </Field>
+        {(f.role === "RMN" || f.role === "RGN") && (
+          <>
+            <Field label="NMC Pin No" required>
+              <TextInput name="nmcPin" value={f.nmcPin} onChange={v => set({ nmcPin: v })} />
+            </Field>
+            <Field label="RCN Number" required>
+              <TextInput name="rcnNumber" value={f.rcnNumber} onChange={v => set({ rcnNumber: v })} />
+            </Field>
+            <Field label="HPC Number" required>
+              <TextInput name="hpcNumber" value={f.hpcNumber} onChange={v => set({ hpcNumber: v })} />
+            </Field>
+            <Field label="Band" required>
+              <Select value={f.band} onChange={v => set({ band: v })} placeholder="Please select" options={bandOpts} />
+            </Field>
+          </>
+        )}
       </div>
 
       {/* Address */}
@@ -523,7 +524,7 @@ function Step1({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
       </div>
       <div style={{ marginTop: 14 }}>
         <Field label="Upload ID Photo">
-          <FileInput label="id-photo" onChange={v => set({ idPhoto: v })} />
+          <FileInput label="id-photo" onChange={v => set({ idPhoto: v })} fileName={f.idPhoto?.name} />
           <p style={{ margin: "5px 0 0", fontFamily: "'Lato', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>This photo will be used for your ID badge and profile. Please ensure your face is clearly visible.</p>
         </Field>
       </div>
@@ -570,10 +571,10 @@ function Step1({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
           )}
         </div>
         <Field label="Upload a copy of your passport/permit">
-          <FileInput label="passport-copy" onChange={v => set({ passportCopy: v })} />
+          <FileInput label="passport-copy" onChange={v => set({ passportCopy: v })} fileName={f.passportCopy?.name} />
         </Field>
         <Field label="Upload proof of address (Bank Statement, Utility Bill, Driving Licence, etc.)">
-          <FileInput label="proof-address" onChange={v => set({ proofOfAddress: v })} />
+          <FileInput label="proof-address" onChange={v => set({ proofOfAddress: v })} fileName={f.proofOfAddress?.name} />
         </Field>
         <InfoBox>Please note: you must provide copies of all IELTS certificates held by you.</InfoBox>
       </div>
@@ -663,47 +664,51 @@ function Step1({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
 // ─── STEP 2: Employment & Education ───────────────────────────────────────────
 
 function Step2({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => void }) {
-  const RefBlock = ({ n, prefix }: { n: 1 | 2; prefix: "ref1" | "ref2" }) => (
-    <div style={{ background: "#f7fafd", border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 18px" }}>
-      <h4 style={{ margin: "0 0 16px", fontFamily: "'Georgia', serif", color: C.navy, fontSize: "0.95rem" }}>Reference {n}</h4>
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <Field label="Relationship" required>
-          <TextInput name={`${prefix}Relationship`} value={(f as any)[`${prefix}Relationship`]} onChange={v => set({ [`${prefix}Relationship`]: v })} />
-        </Field>
-        <div style={gridStyle(2)}>
-          <Field label="First Name" required>
-            <TextInput name={`${prefix}FirstName`} value={(f as any)[`${prefix}FirstName`]} onChange={v => set({ [`${prefix}FirstName`]: v })} />
+  const RefBlock = ({ n, prefix }: { n: 1 | 2; prefix: "ref1" | "ref2" }) => {
+    const getVal = (suffix: string) => (f as any)[`${prefix}${suffix}`] as string;
+    const setVal = (suffix: string, v: string) => set({ [`${prefix}${suffix}`]: v } as any);
+    return (
+      <div style={{ background: "#f7fafd", border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 18px" }}>
+        <h4 style={{ margin: "0 0 16px", fontFamily: "'Georgia', serif", color: C.navy, fontSize: "0.95rem" }}>Reference {n}</h4>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <Field label="Relationship" required>
+            <TextInput name={`${prefix}Relationship`} value={getVal("Relationship")} onChange={v => setVal("Relationship", v)} />
           </Field>
-          <Field label="Last Name" required>
-            <TextInput name={`${prefix}LastName`} value={(f as any)[`${prefix}LastName`]} onChange={v => set({ [`${prefix}LastName`]: v })} />
+          <div style={gridStyle(2)}>
+            <Field label="First Name" required>
+              <TextInput name={`${prefix}FirstName`} value={getVal("FirstName")} onChange={v => setVal("FirstName", v)} />
+            </Field>
+            <Field label="Last Name" required>
+              <TextInput name={`${prefix}LastName`} value={getVal("LastName")} onChange={v => setVal("LastName", v)} />
+            </Field>
+            <Field label="Email" required>
+              <TextInput name={`${prefix}Email`} value={getVal("Email")} onChange={v => setVal("Email", v)} type="email" />
+            </Field>
+            <Field label="Confirm Email" required>
+              <TextInput name={`${prefix}EmailConfirm`} value={getVal("EmailConfirm")} onChange={v => setVal("EmailConfirm", v)} type="email" />
+            </Field>
+            <Field label="Phone" required>
+              <TextInput name={`${prefix}Phone`} value={getVal("Phone")} onChange={v => setVal("Phone", v)} type="tel" />
+            </Field>
+          </div>
+          <Field label="Street Address" required>
+            <TextInput name={`${prefix}Street`} value={getVal("Street")} onChange={v => setVal("Street", v)} />
           </Field>
-          <Field label="Email" required>
-            <TextInput name={`${prefix}Email`} value={(f as any)[`${prefix}Email`]} onChange={v => set({ [`${prefix}Email`]: v })} type="email" />
-          </Field>
-          <Field label="Confirm Email" required>
-            <TextInput name={`${prefix}EmailConfirm`} value={(f as any)[`${prefix}EmailConfirm`]} onChange={v => set({ [`${prefix}EmailConfirm`]: v })} type="email" />
-          </Field>
-          <Field label="Phone" required>
-            <TextInput name={`${prefix}Phone`} value={(f as any)[`${prefix}Phone`]} onChange={v => set({ [`${prefix}Phone`]: v })} type="tel" />
-          </Field>
-        </div>
-        <Field label="Street Address" required>
-          <TextInput name={`${prefix}Street`} value={(f as any)[`${prefix}Street`]} onChange={v => set({ [`${prefix}Street`]: v })} />
-        </Field>
-        <div style={gridStyle(3)}>
-          <Field label="City" required>
-            <TextInput name={`${prefix}City`} value={(f as any)[`${prefix}City`]} onChange={v => set({ [`${prefix}City`]: v })} />
-          </Field>
-          <Field label="County / Region" required>
-            <TextInput name={`${prefix}County`} value={(f as any)[`${prefix}County`]} onChange={v => set({ [`${prefix}County`]: v })} />
-          </Field>
-          <Field label="Postcode" required>
-            <TextInput name={`${prefix}Postcode`} value={(f as any)[`${prefix}Postcode`]} onChange={v => set({ [`${prefix}Postcode`]: v })} />
-          </Field>
+          <div style={gridStyle(3)}>
+            <Field label="City" required>
+              <TextInput name={`${prefix}City`} value={getVal("City")} onChange={v => setVal("City", v)} />
+            </Field>
+            <Field label="County / Region" required>
+              <TextInput name={`${prefix}County`} value={getVal("County")} onChange={v => setVal("County", v)} />
+            </Field>
+            <Field label="Postcode" required>
+              <TextInput name={`${prefix}Postcode`} value={getVal("Postcode")} onChange={v => setVal("Postcode", v)} />
+            </Field>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div>
@@ -712,7 +717,7 @@ function Step2({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
         Please complete this section even if you have a CV. The NHS states that "Employment history should be recorded on an Application Form which is signed." Ensure no gaps are left unaccounted for, covering full work history including education. Dates should be in mm/yy format with no gaps.
       </InfoBox>
       <Field label="Upload CV" required>
-        <FileInput label="cv" onChange={v => set({ cvFile: v })} />
+        <FileInput label="cv" onChange={v => set({ cvFile: v })} fileName={f.cvFile?.name} />
         <p style={{ margin: "5px 0 0", fontFamily: "'Lato', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>Accepted: PDF, DOC, DOCX, JPG, PNG. Max 128MB.</p>
       </Field>
 
@@ -721,8 +726,8 @@ function Step2({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
         Please supply two professional referees. One must be from your present or most recent employer, must be a senior grade to yourself, and you must have worked for that person for not less than three months. By entering their details, you give permission to contact them.
       </InfoBox>
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <RefBlock n={1} prefix="ref1" />
-        <RefBlock n={2} prefix="ref2" />
+        {RefBlock({ n: 1, prefix: "ref1" })}
+        {RefBlock({ n: 2, prefix: "ref2" })}
       </div>
     </div>
   );
@@ -752,7 +757,7 @@ function Step3({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
           </div>
           <div style={{ marginTop: 14 }}>
             <Field label="Training Certificates">
-              <FileInput label="training-cert" onChange={v => set({ trainingCert: v })} />
+              <FileInput label="training-cert" onChange={v => set({ trainingCert: v })} fileName={f.trainingCert?.name} />
             </Field>
           </div>
           <div style={{ marginTop: 14 }}>
@@ -1050,16 +1055,200 @@ function Step4({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
   );
 }
 
+// ─── Validation ───────────────────────────────────────────────────────────────
+
+function getRequiredFieldsForStep(step: Step, form: AppFormData): { field: string; label: string }[] {
+  const isNursing = form.role === "RMN" || form.role === "RGN";
+  if (step === 1) {
+    const base = [
+      { field: "role", label: "Role" },
+      { field: "firstName", label: "First Name" },
+      { field: "lastName", label: "Last Name" },
+      { field: "mobileNo", label: "Mobile No" },
+      { field: "email", label: "Email" },
+      { field: "dob", label: "Date of Birth" },
+      { field: "niNumber", label: "National Insurance No" },
+      { field: "streetAddress", label: "Street Address" },
+      { field: "city", label: "City" },
+      { field: "county", label: "County" },
+      { field: "postcode", label: "Postcode" },
+      { field: "nationality", label: "Nationality" },
+      { field: "sexualOrientation", label: "Sexual Orientation" },
+      { field: "permittedToWork", label: "Permitted to Work in UK" },
+      { field: "passportNo", label: "Passport No" },
+      { field: "visaExpiryDate", label: "Visa/Permit Expiry Date" },
+      { field: "hasFullLicence", label: "Full Driving Licence" },
+      { field: "travelToWork", label: "Travel to Work" },
+      { field: "nokFirstName", label: "Next of Kin First Name" },
+      { field: "nokLastName", label: "Next of Kin Last Name" },
+      { field: "nokRelationship", label: "Next of Kin Relationship" },
+      { field: "nokMobile", label: "Next of Kin Mobile" },
+      { field: "nokStreet", label: "Next of Kin Street" },
+      { field: "nokCity", label: "Next of Kin City" },
+      { field: "nokCounty", label: "Next of Kin County" },
+      { field: "nokPostcode", label: "Next of Kin Postcode" },
+    ];
+    if (isNursing) {
+      base.push(
+        { field: "nmcPin", label: "NMC Pin No" },
+        { field: "rcnNumber", label: "RCN Number" },
+        { field: "hpcNumber", label: "HPC Number" },
+        { field: "band", label: "Band" },
+      );
+    }
+    if (form.hasFullLicence === "Yes") {
+      base.push({ field: "drivingLicenceNo", label: "Driving Licence No" });
+      base.push({ field: "hasCarForWork", label: "Car for Work" });
+      base.push({ field: "drivingBan", label: "Driving Ban" });
+    }
+    if (form.availability.length === 0) {
+      base.push({ field: "availability", label: "Work Availability" });
+    }
+    return base;
+  }
+  if (step === 2) {
+    return [
+      { field: "ref1Relationship", label: "Reference 1 Relationship" },
+      { field: "ref1FirstName", label: "Reference 1 First Name" },
+      { field: "ref1LastName", label: "Reference 1 Last Name" },
+      { field: "ref1Email", label: "Reference 1 Email" },
+      { field: "ref1EmailConfirm", label: "Reference 1 Confirm Email" },
+      { field: "ref1Phone", label: "Reference 1 Phone" },
+      { field: "ref1Street", label: "Reference 1 Street" },
+      { field: "ref1City", label: "Reference 1 City" },
+      { field: "ref1County", label: "Reference 1 County" },
+      { field: "ref1Postcode", label: "Reference 1 Postcode" },
+      { field: "ref2Relationship", label: "Reference 2 Relationship" },
+      { field: "ref2FirstName", label: "Reference 2 First Name" },
+      { field: "ref2LastName", label: "Reference 2 Last Name" },
+      { field: "ref2Email", label: "Reference 2 Email" },
+      { field: "ref2EmailConfirm", label: "Reference 2 Confirm Email" },
+      { field: "ref2Phone", label: "Reference 2 Phone" },
+      { field: "ref2Street", label: "Reference 2 Street" },
+      { field: "ref2City", label: "Reference 2 City" },
+      { field: "ref2County", label: "Reference 2 County" },
+      { field: "ref2Postcode", label: "Reference 2 Postcode" },
+    ];
+  }
+  if (step === 3) {
+    const base: { field: string; label: string }[] = [
+      { field: "completedMandatoryTraining", label: "Completed Mandatory Training" },
+      { field: "completedOtherTraining", label: "Completed Other Training" },
+      { field: "hasDbs", label: "DBS Status" },
+    ];
+    if (form.hasDbs === "Yes") {
+      base.push({ field: "dbsClear", label: "DBS Clear" });
+      base.push({ field: "dbsIssueDate", label: "DBS Issue Date" });
+    }
+    return base;
+  }
+  // step 4
+  return [
+    { field: "longTermIllness", label: "Long Term Illness" },
+    { field: "sickLeaveBackNeck", label: "Sick Leave Back/Neck" },
+    { field: "backNeckInjury", label: "Back/Neck Injury" },
+    { field: "contactContagious", label: "Contact with Contagious" },
+    { field: "communicableDisease", label: "Communicable Disease" },
+    { field: "activemedicalAttention", label: "Active Medical Attention" },
+    { field: "registeredDisabled", label: "Registered Disabled" },
+    { field: "exposureProneProcedures", label: "Exposure Prone Procedures" },
+    { field: "criminalConviction", label: "Criminal Conviction" },
+    { field: "cautionedOrWarned", label: "Cautioned or Warned" },
+    { field: "workingTimeDirective", label: "Working Time Directive" },
+    { field: "declarationDate", label: "Declaration Date" },
+    { field: "declarationFullName", label: "Declaration Full Name" },
+  ];
+}
+
+function validateStep(step: Step, form: AppFormData): string[] {
+  const required = getRequiredFieldsForStep(step, form);
+  const missing: string[] = [];
+  for (const { field, label } of required) {
+    const val = (form as any)[field];
+    if (val === "" || val === null || val === undefined || (Array.isArray(val) && val.length === 0)) {
+      missing.push(label);
+    }
+  }
+  // Extra validations
+  if (step === 2) {
+    if (form.ref1Email && form.ref1EmailConfirm && form.ref1Email !== form.ref1EmailConfirm) {
+      missing.push("Reference 1 emails do not match");
+    }
+    if (form.ref2Email && form.ref2EmailConfirm && form.ref2Email !== form.ref2EmailConfirm) {
+      missing.push("Reference 2 emails do not match");
+    }
+  }
+  if (step === 4 && !form.privacyConsent) {
+    missing.push("Privacy Policy consent");
+  }
+  return missing;
+}
+
+// ─── Save/Load helpers ────────────────────────────────────────────────────────
+
+const STORAGE_KEY = "reach_application_draft";
+
+function saveDraft(form: AppFormData, step: Step) {
+  try {
+    const { idPhoto, passportCopy, proofOfAddress, cvFile, trainingCert, ...serializable } = form;
+    const draft = {
+      data: serializable,
+      step,
+      fileNames: {
+        idPhoto: idPhoto?.name || "",
+        passportCopy: passportCopy?.name || "",
+        proofOfAddress: proofOfAddress?.name || "",
+        cvFile: cvFile?.name || "",
+        trainingCert: trainingCert?.name || "",
+      },
+      savedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+  } catch {}
+}
+
+function loadDraft(): { data: Partial<AppFormData>; step: Step; fileNames: Record<string, string> } | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+}
+
 export default function ApplicationPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const [form, setFormRaw] = useState<AppFormData>(initialForm);
-  const [submitted, setSubmitted] = useState(false);
   const [successName, setSuccessName] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
+  const [savedFileNames, setSavedFileNames] = useState<Record<string, string>>({});
+  const [showSaved, setShowSaved] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
+
+  // Load draft on mount
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) setHasDraft(true);
+  }, []);
+
+  const restoreDraft = () => {
+    const draft = loadDraft();
+    if (draft) {
+      setFormRaw(p => ({ ...p, ...draft.data }));
+      setStep(draft.step);
+      setSavedFileNames(draft.fileNames || {});
+      setHasDraft(false);
+    }
+  };
 
   useEffect(() => {
     if (successName) {
+      clearDraft();
       const t = setTimeout(() => router.replace('/register'), 3000);
       return () => clearTimeout(t);
     }
@@ -1067,20 +1256,39 @@ export default function ApplicationPage() {
 
   const set = (v: Partial<AppFormData>) => setFormRaw(p => ({ ...p, ...v }));
 
+  const handleSave = () => {
+    saveDraft(form, step);
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2500);
+  };
+
   const next = () => {
+    const missing = validateStep(step, form);
+    if (missing.length > 0) {
+      setErrors(missing);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    setErrors([]);
     setStep(s => Math.min(4, s + 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const prev = () => {
+    setErrors([]);
     setStep(s => Math.max(1, s - 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const submit = async () => {
-    if (!form.privacyConsent) { alert("Please accept the Privacy Policy to submit."); return; }
+    const missing = validateStep(step, form);
+    if (missing.length > 0) {
+      setErrors(missing);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    setErrors([]);
     
     try {
       const fd = new FormData();
-      // Append all non-file fields as JSON
       const { idPhoto, passportCopy, proofOfAddress, cvFile, trainingCert, ...rest } = form;
       fd.append('data', JSON.stringify(rest));
       if (idPhoto) fd.append('idPhoto', idPhoto);
@@ -1094,14 +1302,22 @@ export default function ApplicationPage() {
         body: fd,
       });
       
-      if (!response.ok) throw new Error('Submission failed');
+      const result = await response.json();
+      
+      if (!response.ok) {
+        setErrors([result.message || 'Submission failed. Please check your connection and try again.']);
+        topRef.current?.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
       
       const name = form.firstName;
+      clearDraft();
       setFormRaw({ ...initialForm });
       setStep(1);
       setSuccessName(name);
     } catch (error) {
-      alert('Failed to submit application. Please try again.');
+      setErrors(['Unable to submit application. Please check your internet connection and try again. If the problem persists, contact recruitment@reach-healthcare.com']);
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
       console.error(error);
     }
   };
@@ -1125,6 +1341,13 @@ export default function ApplicationPage() {
 
   return (
     <main style={{ background: C.bgPage, fontFamily: "'Lato', sans-serif", overflowX: "hidden" }}>
+      <style>{`
+        .app-field:focus {
+          border-color: ${C.borderFocus} !important;
+          box-shadow: 0 0 0 3px rgba(9,132,227,0.12) !important;
+          outline: none;
+        }
+      `}</style>
       {successOverlay}
       <Header />
       {/* Hero */}
@@ -1136,13 +1359,55 @@ export default function ApplicationPage() {
           Apply to Join Reach Healthcare
         </h1>
         <p style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Lato', sans-serif", fontSize: "0.9rem", maxWidth: 440, margin: "0 auto" }}>
-          Complete all four sections. Required fields are marked with an asterisk&nbsp;(*).
+          Complete all four sections. Required fields are marked with an asterisk&nbsp;(*). You can save your progress at any time and return later.
         </p>
       </section>
 
       {/* Form */}
       <section style={{ maxWidth: 860, margin: "0 auto", padding: "44px 20px 80px" }}>
         <div ref={topRef} style={{ background: C.bgCard, borderRadius: 20, padding: "clamp(20px,5vw,40px)", boxShadow: "0 6px 40px rgba(9,100,200,0.09)", border: `1px solid #e0ebf7` }}>
+
+          {/* Draft restore banner */}
+          {hasDraft && (
+            <div style={{ background: "#fffbeb", border: `1px solid ${C.amber}`, borderRadius: 10, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+              <p style={{ margin: 0, fontFamily: "'Lato', sans-serif", fontSize: "0.85rem", color: "#92400e" }}>
+                📝 You have a saved application draft. Would you like to continue where you left off?
+              </p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button type="button" onClick={restoreDraft}
+                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: C.blue, color: "#fff", fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>
+                  Restore Draft
+                </button>
+                <button type="button" onClick={() => { clearDraft(); setHasDraft(false); }}
+                  style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${C.border}`, background: "#fff", color: C.textMuted, fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", cursor: "pointer" }}>
+                  Start Fresh
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Validation errors */}
+          {errors.length > 0 && (
+            <div style={{ background: "#fef2f2", border: `1px solid #fca5a5`, borderRadius: 10, padding: "16px 18px", marginBottom: 20 }}>
+              <p style={{ margin: "0 0 8px", fontFamily: "'Lato', sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "#991b1b" }}>
+                Please complete the following required fields:
+              </p>
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {errors.map((e, i) => (
+                  <li key={i} style={{ fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", color: "#dc2626", lineHeight: 1.8 }}>{e}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Saved toast */}
+          {showSaved && (
+            <div style={{ background: "#ecfdf5", border: `1px solid #6ee7b7`, borderRadius: 10, padding: "12px 18px", marginBottom: 20, textAlign: "center" }}>
+              <p style={{ margin: 0, fontFamily: "'Lato', sans-serif", fontSize: "0.85rem", color: "#065f46" }}>
+                ✓ Application draft saved. You can close this page and return later.
+              </p>
+            </div>
+          )}
 
           <StepBar current={step} />
 
@@ -1155,13 +1420,19 @@ export default function ApplicationPage() {
           </div>
 
           {/* Navigation */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 36, paddingTop: 24, borderTop: `1px solid ${C.border}` }}>
-            {step > 1
-              ? <button type="button" onClick={prev}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 36, paddingTop: 24, borderTop: `1px solid ${C.border}`, flexWrap: "wrap", gap: 12 }}>
+            <div style={{ display: "flex", gap: 10 }}>
+              {step > 1 && (
+                <button type="button" onClick={prev}
                   style={{ padding: "12px 28px", borderRadius: 50, border: `1.5px solid ${C.border}`, background: "#fff", color: C.textMuted, fontFamily: "'Lato', sans-serif", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer" }}>
                   ← Previous
                 </button>
-              : <div />}
+              )}
+              <button type="button" onClick={handleSave}
+                style={{ padding: "12px 24px", borderRadius: 50, border: `1.5px solid ${C.amber}`, background: "#fffbeb", color: "#92400e", fontFamily: "'Lato', sans-serif", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer" }}>
+                💾 Save Draft
+              </button>
+            </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <span style={{ fontFamily: "'Lato', sans-serif", fontSize: "0.72rem", color: C.textMuted }}>Step {step} of 4</span>

@@ -157,6 +157,16 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const data = JSON.parse(formData.get('data') as string) as Record<string, unknown>;
 
+    // Basic server-side validation
+    const requiredFields = ['firstName', 'lastName', 'email', 'mobileNo', 'role'];
+    const missingFields = requiredFields.filter(f => !data[f]);
+    if (missingFields.length > 0) {
+      return NextResponse.json({ 
+        success: false, 
+        message: `Missing required fields: ${missingFields.join(', ')}` 
+      }, { status: 400 });
+    }
+
     // Collect uploaded files
     const fileFields = ['idPhoto', 'passportCopy', 'proofOfAddress', 'cvFile', 'trainingCert'];
     const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
@@ -224,9 +234,53 @@ export async function POST(request: Request) {
       ],
     });
 
+    // Send confirmation email to applicant
+    if (data.email) {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: data.email as string,
+        subject: `Application Received — Reach Healthcare Solutions`,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
+            <div style="background:#0a4d7c;padding:24px 32px">
+              <h1 style="color:#fff;margin:0;font-size:20px">Application Received</h1>
+            </div>
+            <div style="padding:28px 32px;background:#fff">
+              <p style="font-size:14px;color:#333;line-height:1.7">Dear ${data.firstName},</p>
+              <p style="font-size:14px;color:#333;line-height:1.7">Thank you for submitting your application for the <strong>${data.role}</strong> position at Reach Healthcare Solutions.</p>
+              <p style="font-size:14px;color:#333;line-height:1.7">We have received your application and our recruitment team will review it within 2–3 working days. We will be in touch regarding next steps.</p>
+              <p style="font-size:14px;color:#333;line-height:1.7">If you have any questions in the meantime, please contact us at <a href="mailto:recruitment@reach-healthcare.com">recruitment@reach-healthcare.com</a> or call 0203 441 5474.</p>
+              <p style="font-size:14px;color:#555;margin-top:24px">Kind regards,<br><strong>Reach Healthcare Recruitment Team</strong></p>
+            </div>
+            <div style="background:#f5f5f5;padding:16px 32px;font-size:12px;color:#999;text-align:center">
+              Reach Healthcare Solutions Limited | Registration No: 11888752
+            </div>
+          </div>
+        `,
+      }).catch(() => { /* Don't fail the submission if confirmation email fails */ });
+    }
+
     return NextResponse.json({ success: true, message: 'Application submitted successfully' });
   } catch (error) {
     console.error('Submission error:', error);
-    return NextResponse.json({ success: false, message: 'Failed to submit application' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    
+    if (message.includes('ECONNREFUSED') || message.includes('ETIMEDOUT')) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Email service is temporarily unavailable. Please try again in a few minutes or contact recruitment@reach-healthcare.com directly.' 
+      }, { status: 503 });
+    }
+    if (message.includes('auth') || message.includes('credentials')) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'There is a server configuration issue. Please contact recruitment@reach-healthcare.com directly.' 
+      }, { status: 500 });
+    }
+    
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Failed to submit application. Please try again or contact recruitment@reach-healthcare.com if the problem persists.' 
+    }, { status: 500 });
   }
 }
