@@ -1276,13 +1276,6 @@ export default function ApplicationPage() {
     saveDraft(form, step);
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2500);
-    if (form.email && form.firstName) {
-      fetch('/api/save-draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, firstName: form.firstName }),
-      }).catch(() => {});
-    }
   };
 
   const next = () => {
