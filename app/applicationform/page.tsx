@@ -807,7 +807,7 @@ function Step3({ f, set }: { f: AppFormData; set: (v: Partial<AppFormData>) => v
               <Field label="Date of Issue" required>
                 <TextInput name="dbsIssueDate" value={f.dbsIssueDate} onChange={v => set({ dbsIssueDate: v })} type="date" />
               </Field>
-              <Field label="Disclosure Number">
+              <Field label="Certificate Number">
                 <TextInput name="dbsDisclosureNumber" value={f.dbsDisclosureNumber} onChange={v => set({ dbsDisclosureNumber: v })} />
               </Field>
             </div>
@@ -1073,6 +1073,7 @@ function getRequiredFieldsForStep(step: Step, form: AppFormData): { field: strin
       { field: "county", label: "County" },
       { field: "postcode", label: "Postcode" },
       { field: "nationality", label: "Nationality" },
+      { field: "idPhoto", label: "ID Photo" },
       { field: "sexualOrientation", label: "Sexual Orientation" },
       { field: "permittedToWork", label: "Permitted to Work in UK" },
       { field: "passportNo", label: "Passport No" },
@@ -1234,6 +1235,21 @@ export default function ApplicationPage() {
   useEffect(() => {
     const draft = loadDraft();
     if (draft) setHasDraft(true);
+    // Pre-fill from Quick Registration data
+    try {
+      const reg = localStorage.getItem("reach_registration");
+      if (reg) {
+        const { email, phone, firstName, lastName, role } = JSON.parse(reg);
+        setFormRaw(p => ({
+          ...p,
+          ...(email && !p.email ? { email } : {}),
+          ...(phone && !p.mobileNo ? { mobileNo: phone } : {}),
+          ...(firstName && !p.firstName ? { firstName } : {}),
+          ...(lastName && !p.lastName ? { lastName } : {}),
+          ...(role && role !== "Select Job Role" ? { role } : {}),
+        }));
+      }
+    } catch {}
   }, []);
 
   const restoreDraft = () => {
@@ -1302,7 +1318,12 @@ export default function ApplicationPage() {
         body: fd,
       });
       
-      const result = await response.json();
+      let result: { success?: boolean; message?: string };
+      try {
+        result = await response.json();
+      } catch {
+        result = { success: false, message: `Server returned status ${response.status}. Please try again or contact recruitment@reach-healthcare.com` };
+      }
       
       if (!response.ok) {
         setErrors([result.message || 'Submission failed. Please check your connection and try again.']);

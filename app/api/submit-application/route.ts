@@ -127,7 +127,7 @@ async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   field('DBS Check', data.hasDbs);
   field('DBS Clear', data.dbsClear);
   field('DBS Issue Date', data.dbsIssueDate);
-  field('DBS Disclosure No', data.dbsDisclosureNumber);
+  field('DBS Certificate No', data.dbsDisclosureNumber);
 
   section('HEALTH DECLARATION');
   rowCount = 0;

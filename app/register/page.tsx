@@ -91,6 +91,7 @@ function RegistrationForm() {
   };
   useEffect (() => {
     if (submitted) {
+      localStorage.setItem("reach_registration", JSON.stringify(form));
       router.push("/application");
     }
   }, [submitted]);
