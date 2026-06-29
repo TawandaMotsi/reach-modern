@@ -1229,6 +1229,7 @@ export default function ApplicationPage() {
   const [savedFileNames, setSavedFileNames] = useState<Record<string, string>>({});
   const [showSaved, setShowSaved] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
 
   // Load draft on mount
@@ -1264,7 +1265,6 @@ export default function ApplicationPage() {
 
   useEffect(() => {
     if (successName) {
-      clearDraft();
       const t = setTimeout(() => router.replace('/register'), 3000);
       return () => clearTimeout(t);
     }
@@ -1295,6 +1295,7 @@ export default function ApplicationPage() {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const submit = async () => {
+    if (isSubmitting) return;
     const missing = validateStep(step, form);
     if (missing.length > 0) {
       setErrors(missing);
@@ -1302,6 +1303,7 @@ export default function ApplicationPage() {
       return;
     }
     setErrors([]);
+    setIsSubmitting(true);
     
     try {
       const fd = new FormData();
@@ -1340,6 +1342,8 @@ export default function ApplicationPage() {
       setErrors(['Unable to submit application. Please check your internet connection and try again. If the problem persists, contact recruitment@reach-healthcare.com']);
       topRef.current?.scrollIntoView({ behavior: "smooth" });
       console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -1462,9 +1466,9 @@ export default function ApplicationPage() {
                     style={{ padding: "13px 32px", borderRadius: 50, border: "none", background: C.blue, color: "#fff", fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", boxShadow: "0 4px 16px rgba(9,132,227,0.28)", transition: "all 0.2s" }}>
                     Continue →
                   </button>
-                : <button type="button" onClick={submit}
-                    style={{ padding: "13px 32px", borderRadius: 50, border: "none", background: C.green, color: "#fff", fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: "0.9rem", cursor: "pointer", boxShadow: "0 4px 16px rgba(34,187,110,0.3)", transition: "all 0.2s" }}>
-                    Submit Application ✓
+                : <button type="button" onClick={submit} disabled={isSubmitting}
+                    style={{ padding: "13px 32px", borderRadius: 50, border: "none", background: isSubmitting ? "#6bb896" : C.green, color: "#fff", fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: "0.9rem", cursor: isSubmitting ? "not-allowed" : "pointer", boxShadow: "0 4px 16px rgba(34,187,110,0.3)", transition: "all 0.2s", opacity: isSubmitting ? 0.75 : 1 }}>
+                    {isSubmitting ? "Submitting…" : "Submit Application ✓"}
                   </button>}
             </div>
           </div>
