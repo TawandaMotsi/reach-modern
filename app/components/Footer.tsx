@@ -83,7 +83,7 @@ export default function Footer() {
                 Office Address
               </h4>
               <address style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.875rem", lineHeight: 2, fontStyle: "normal" }}>
-                Design Centre Suite 145A,<br />
+                Business Design Centre Suite 145A,<br />
                 52 Upper Street, Islington,<br />
                 London, England,<br />
                 N1 0QH
