@@ -265,22 +265,10 @@ export async function POST(request: Request) {
     console.error('Submission error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     
-    if (message.includes('ECONNREFUSED') || message.includes('ETIMEDOUT')) {
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Email service is temporarily unavailable. Please try again in a few minutes or contact recruitment@reach-healthcare.com directly.' 
-      }, { status: 503 });
-    }
-    if (message.includes('auth') || message.includes('credentials')) {
-      return NextResponse.json({ 
-        success: false, 
-        message: 'There is a server configuration issue. Please contact recruitment@reach-healthcare.com directly.' 
-      }, { status: 500 });
-    }
-    
+    // TODO: remove debug info before going live
     return NextResponse.json({ 
       success: false, 
-      message: 'Failed to submit application. Please try again or contact recruitment@reach-healthcare.com if the problem persists.' 
+      message: `Debug: ${message}` 
     }, { status: 500 });
   }
 }
