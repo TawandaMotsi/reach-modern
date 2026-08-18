@@ -4,6 +4,14 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
 
+// Increase body size limit to 20MB to accommodate CV, passport, and other uploads
+export const config = {
+  api: {
+    bodyParser: false,
+    sizeLimit: '20mb',
+  },
+};
+
 async function generatePDF(data: Record<string, unknown>): Promise<Buffer> {
   const pdfDoc = await PDFDocument.create();
   let page = pdfDoc.addPage([595, 842]);
@@ -170,10 +178,17 @@ export async function POST(request: Request) {
     // Collect uploaded files
     const fileFields = ['idPhoto', 'passportCopy', 'proofOfAddress', 'cvFile', 'trainingCert'];
     const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
 
     for (const field of fileFields) {
       const file = formData.get(field) as File | null;
       if (file && file.size > 0) {
+        if (file.size > MAX_FILE_SIZE) {
+          return NextResponse.json({
+            success: false,
+            message: `File "${file.name}" is too large. Maximum size per file is 5MB.`,
+          }, { status: 400 });
+        }
         const buffer = Buffer.from(await file.arrayBuffer());
         attachments.push({ filename: file.name, content: buffer, contentType: file.type });
       }
@@ -264,11 +279,23 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Submission error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
-    
-    // TODO: remove debug info before going live
-    return NextResponse.json({ 
-      success: false, 
-      message: `Debug: ${message}` 
+
+    if (message.includes('ECONNREFUSED') || message.includes('ETIMEDOUT')) {
+      return NextResponse.json({
+        success: false,
+        message: 'Email service is temporarily unavailable. Please try again in a few minutes or contact recruitment@reach-healthcare.com directly.',
+      }, { status: 503 });
+    }
+    if (message.includes('auth') || message.includes('credentials')) {
+      return NextResponse.json({
+        success: false,
+        message: 'There is a server configuration issue. Please contact recruitment@reach-healthcare.com directly.',
+      }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      success: false,
+      message: 'Failed to submit application. Please try again or contact recruitment@reach-healthcare.com if the problem persists.',
     }, { status: 500 });
   }
 }
