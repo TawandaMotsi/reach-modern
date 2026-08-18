@@ -89,9 +89,23 @@ function RegistrationForm() {
     marginBottom: 6,
     fontFamily: "sans-serif",
   };
-  useEffect (() => {
+  useEffect(() => {
     if (submitted) {
       localStorage.setItem("reach_registration", JSON.stringify(form));
+
+      // Notify recruitment of the new registration (fire and forget — don't block the user)
+      fetch("/api/notify-registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          role: form.role === "Other" ? form.otherRole : form.role,
+        }),
+      }).catch(() => { /* silently ignore if notification fails */ });
+
       router.push("/application");
     }
   }, [submitted]);
