@@ -1286,11 +1286,13 @@ export default function ApplicationPage() {
       return;
     }
     setErrors([]);
+    saveDraft(form, Math.min(4, step + 1) as Step); // auto-save silently on advance
     setStep(s => Math.min(4, s + 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const prev = () => {
     setErrors([]);
+    saveDraft(form, Math.max(1, step - 1) as Step); // auto-save silently on back
     setStep(s => Math.max(1, s - 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -1453,10 +1455,6 @@ export default function ApplicationPage() {
                   ← Previous
                 </button>
               )}
-              <button type="button" onClick={handleSave}
-                style={{ padding: "12px 24px", borderRadius: 50, border: `1.5px solid ${C.amber}`, background: "#fffbeb", color: "#92400e", fontFamily: "'Lato', sans-serif", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer" }}>
-                💾 Save Draft
-              </button>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
