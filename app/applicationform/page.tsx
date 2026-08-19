@@ -1226,17 +1226,11 @@ export default function ApplicationPage() {
   const [form, setFormRaw] = useState<AppFormData>(initialForm);
   const [successName, setSuccessName] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-  const [savedFileNames, setSavedFileNames] = useState<Record<string, string>>({});
-  const [showSaved, setShowSaved] = useState(false);
-  const [hasDraft, setHasDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
 
-  // Load draft on mount
+  // Pre-fill from Quick Registration data
   useEffect(() => {
-    const draft = loadDraft();
-    if (draft) setHasDraft(true);
-    // Pre-fill from Quick Registration data
     try {
       const reg = localStorage.getItem("reach_registration");
       if (reg) {
@@ -1253,16 +1247,6 @@ export default function ApplicationPage() {
     } catch {}
   }, []);
 
-  const restoreDraft = () => {
-    const draft = loadDraft();
-    if (draft) {
-      setFormRaw(p => ({ ...p, ...draft.data }));
-      setStep(draft.step);
-      setSavedFileNames(draft.fileNames || {});
-      setHasDraft(false);
-    }
-  };
-
   useEffect(() => {
     if (successName) {
       const t = setTimeout(() => router.replace('/register'), 3000);
@@ -1272,12 +1256,6 @@ export default function ApplicationPage() {
 
   const set = (v: Partial<AppFormData>) => setFormRaw(p => ({ ...p, ...v }));
 
-  const handleSave = () => {
-    saveDraft(form, step);
-    setShowSaved(true);
-    setTimeout(() => setShowSaved(false), 2500);
-  };
-
   const next = () => {
     const missing = validateStep(step, form);
     if (missing.length > 0) {
@@ -1286,13 +1264,11 @@ export default function ApplicationPage() {
       return;
     }
     setErrors([]);
-    saveDraft(form, Math.min(4, step + 1) as Step); // auto-save silently on advance
     setStep(s => Math.min(4, s + 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const prev = () => {
     setErrors([]);
-    saveDraft(form, Math.max(1, step - 1) as Step); // auto-save silently on back
     setStep(s => Math.max(1, s - 1) as Step);
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -1330,7 +1306,8 @@ export default function ApplicationPage() {
       }
       
       if (!response.ok) {
-        setErrors([result.message || 'Submission failed. Please check your connection and try again.']);
+        const reason = result.message || `Server error (${response.status}). Please try again or contact recruitment@reach-healthcare.com.`;
+        setErrors([reason]);
         topRef.current?.scrollIntoView({ behavior: "smooth" });
         return;
       }
@@ -1341,9 +1318,22 @@ export default function ApplicationPage() {
       setStep(1);
       setSuccessName(name);
     } catch (error) {
-      setErrors(['Unable to submit application. Please check your internet connection and try again. If the problem persists, contact recruitment@reach-healthcare.com']);
+      const err = error instanceof Error ? error : new Error(String(error));
+      let userMessage = 'Unable to submit your application. ';
+
+      if (!navigator.onLine) {
+        userMessage += 'You appear to be offline — please check your internet connection and try again.';
+      } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+        userMessage += 'A network error occurred. Please check your connection and try again.';
+      } else if (err.message.includes('timeout') || err.message.includes('AbortError')) {
+        userMessage += 'The request timed out — your files may be too large. Try reducing file sizes and resubmitting.';
+      } else {
+        userMessage += 'Please try again. If the problem persists, email your application directly to recruitment@reach-healthcare.com or call 0203 441 5474.';
+      }
+
+      setErrors([userMessage]);
       topRef.current?.scrollIntoView({ behavior: "smooth" });
-      console.error(error);
+      console.error('Submission error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -1358,10 +1348,13 @@ export default function ApplicationPage() {
           <svg width="32" height="32" fill="none" viewBox="0 0 36 36"><path d="M6 18L14 26L30 10" stroke={C.green} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </div>
         <h2 style={{ fontFamily: "'Georgia', serif", color: C.navy, fontSize: "1.5rem", marginBottom: 10 }}>Application Submitted!</h2>
-        <p style={{ color: C.textMuted, fontSize: "0.92rem", lineHeight: 1.7, marginBottom: 24 }}>
-          Thank you, <strong style={{ color: C.text }}>{successName}</strong>. We&apos;ve received your application and will be in touch within 2–3 working days.
+        <p style={{ color: C.textMuted, fontSize: "0.92rem", lineHeight: 1.7, marginBottom: 12 }}>
+          Thank you, <strong style={{ color: C.text }}>{successName}</strong>. We have received your application and compliance documents.
         </p>
-        <p style={{ color: C.textMuted, fontSize: "0.8rem" }}>Redirecting to registration…</p>
+        <p style={{ color: C.textMuted, fontSize: "0.88rem", lineHeight: 1.7, marginBottom: 24 }}>
+          You do not need to contact the office — we will be in touch when suitable work becomes available.
+        </p>
+        <p style={{ color: C.textMuted, fontSize: "0.8rem" }}>Redirecting…</p>
       </div>
     </div>
   ) : null;
@@ -1386,32 +1379,13 @@ export default function ApplicationPage() {
           Apply to Join Reach Healthcare
         </h1>
         <p style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Lato', sans-serif", fontSize: "0.9rem", maxWidth: 440, margin: "0 auto" }}>
-          Complete all four sections. Required fields are marked with an asterisk&nbsp;(*). You can save your progress at any time and return later.
+          Complete all four sections. Required fields are marked with an asterisk&nbsp;(*). Ensure you have all documents ready before you begin — the form cannot be saved and returned to later.
         </p>
       </section>
 
       {/* Form */}
       <section style={{ maxWidth: 860, margin: "0 auto", padding: "44px 20px 80px" }}>
         <div ref={topRef} style={{ background: C.bgCard, borderRadius: 20, padding: "clamp(20px,5vw,40px)", boxShadow: "0 6px 40px rgba(9,100,200,0.09)", border: `1px solid #e0ebf7` }}>
-
-          {/* Draft restore banner */}
-          {hasDraft && (
-            <div style={{ background: "#fffbeb", border: `1px solid ${C.amber}`, borderRadius: 10, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
-              <p style={{ margin: 0, fontFamily: "'Lato', sans-serif", fontSize: "0.85rem", color: "#92400e" }}>
-                📝 You have a saved application draft. Would you like to continue where you left off?
-              </p>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button type="button" onClick={restoreDraft}
-                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: C.blue, color: "#fff", fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>
-                  Restore Draft
-                </button>
-                <button type="button" onClick={() => { clearDraft(); setHasDraft(false); }}
-                  style={{ padding: "8px 16px", borderRadius: 8, border: `1px solid ${C.border}`, background: "#fff", color: C.textMuted, fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", cursor: "pointer" }}>
-                  Start Fresh
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Validation errors */}
           {errors.length > 0 && (
@@ -1424,15 +1398,6 @@ export default function ApplicationPage() {
                   <li key={i} style={{ fontFamily: "'Lato', sans-serif", fontSize: "0.8rem", color: "#dc2626", lineHeight: 1.8 }}>{e}</li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          {/* Saved toast */}
-          {showSaved && (
-            <div style={{ background: "#ecfdf5", border: `1px solid #6ee7b7`, borderRadius: 10, padding: "12px 18px", marginBottom: 20, textAlign: "center" }}>
-              <p style={{ margin: 0, fontFamily: "'Lato', sans-serif", fontSize: "0.85rem", color: "#065f46" }}>
-                ✓ Application draft saved. You can close this page and return later.
-              </p>
             </div>
           )}
 

@@ -30,15 +30,15 @@ function FadeIn({ children, delay = 0, style = {} }: { children: React.ReactNode
 }
 
 const checklist = [
-  { label: "Your NI number", required: true },
-  { label: "ID Photo", required: true },
-  { label: "Passport / Visa Number", required: true },
-  { label: "Copy or picture of Passport / ID", required: true },
-  { label: "Proof of address document", required: true },
-  { label: "2 Employment References", required: true },
-  { label: "Proof of education – Certificate copies", required: true },
-  { label: "Your GP / Doctor's Details", required: true },
-  { label: "Current DBS number (if you have one)", required: false },
+  { label: "Curriculum Vitae (CV)", required: true },
+  { label: "NI Number", required: true },
+  { label: "Passport sized ID photo", required: true },
+  { label: "Passport or Driving Licence", required: true },
+  { label: "2 x Proof of address (last 3 months — utility bill or bank statement)", required: true },
+  { label: "Proof of right to work in the UK (if not a UK citizen)", required: true },
+  { label: "2 References — one professional (senior position), one character", required: true },
+  { label: "Mandatory & Statutory Training certificate", required: true },
+  { label: "Enhanced DBS Certificate (we can assist if you don't have one)", required: false },
 ];
 
 export default function ApplyingOnlinePage() {
@@ -51,7 +51,7 @@ export default function ApplyingOnlinePage() {
         <div style={{ position: "absolute", bottom: -80, left: -60, width: 320, height: 320, borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 620, margin: "0 auto" }}>
           <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.7rem", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 14, fontFamily: "sans-serif" }}>
-            Step 2 of 2
+            Step 2 of 3
           </p>
           <h1 style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)", fontWeight: 800, color: "#fff", lineHeight: 1.1, marginBottom: 18, letterSpacing: "-0.02em" }}>
             Applying Online
@@ -82,7 +82,7 @@ export default function ApplyingOnlinePage() {
                   Please take time to check whether you are ready to apply for registration. Make sure you have everything on the checklist — some items are required, and the form will not allow you to proceed without them.
                 </p>
                 <p style={{ color: "#556677", fontFamily: "sans-serif", fontSize: "0.9rem", lineHeight: 1.8, marginBottom: 0 }}>
-                  Note that you can save your application progress and continue later.
+                  <strong style={{ color: "#dc2626" }}>Important:</strong> You cannot save the online form and return to it later. Please ensure you have all required documents ready and allow enough time to complete the form in one sitting.
                 </p>
               </div>
 
@@ -118,6 +118,23 @@ export default function ApplyingOnlinePage() {
               >
                 Proceed to Application Form →
               </Link>
+
+              {/* Fallback PDF download */}
+              <div style={{ textAlign: "center", padding: "14px 18px", borderRadius: 12, background: "#f7fafd", border: "1px solid #e4edf7" }}>
+                <p style={{ margin: "0 0 8px", fontFamily: "sans-serif", fontSize: "0.8rem", color: "#556677", lineHeight: 1.6 }}>
+                  Having difficulty with the online form?
+                </p>
+                <a
+                  href="/Reach Application Form.pdf"
+                  download
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#0984e3", fontFamily: "sans-serif", fontWeight: 700, fontSize: "0.85rem", textDecoration: "none" }}
+                >
+                  <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+                    <path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="#0984e3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Download paper application form (PDF)
+                </a>
+              </div>
 
               <p style={{ textAlign: "center", margin: 0, fontFamily: "sans-serif", fontSize: "0.78rem", color: "#99aabb" }}>
                 Need help?{" "}
@@ -176,7 +193,7 @@ export default function ApplyingOnlinePage() {
                     </svg>
                   </div>
                   <p style={{ margin: 0, fontFamily: "sans-serif", fontSize: "0.82rem", color: "#78560a", lineHeight: 1.6 }}>
-                    <strong>Save your progress:</strong> You can save the application at any point and return to complete it later using the link sent to your email.
+                    <strong>Important:</strong> You cannot save the form and return to it later. Once you begin, please complete the application in one sitting. Once submitted, you do not need to contact the office — we will be in touch when suitable work becomes available.
                   </p>
                 </div>
               </div>

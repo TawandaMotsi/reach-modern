@@ -307,7 +307,7 @@ export default function RegisterPage() {
             <div style={{ background: "#fff", borderRadius: 20, padding: "38px 34px", boxShadow: "0 4px 36px rgba(9,100,200,0.1)", border: "1px solid #e4edf7" }}>
               <div style={{ marginBottom: 28 }}>
                 <p style={{ margin: "0 0 6px", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#0984e3", fontFamily: "sans-serif" }}>
-                  Step 1 of 2
+                  Step 1 of 3
                 </p>
                 <h2 style={{ margin: "0 0 10px", fontSize: "clamp(1.4rem, 2.5vw, 1.75rem)", fontWeight: 700, color: "#083a5e", lineHeight: 1.2 }}>
                   Quick Registration
